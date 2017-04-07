@@ -73,6 +73,8 @@ export default class UnMeasureData extends Component {
         this.weightUnit = this.props.weightUnit;
 
         Api.saveSessionKey(this.props.sessionKey);
+        Api.savePublicParams(this.props);
+
         Storage.saveSessionKey(this.props.sessionKey);
         Storage.saveThemeColor(this.props.themeColor);
     }

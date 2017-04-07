@@ -13,6 +13,7 @@ import  {
     BackAndroid,
     Platform,
     Alert,
+    ToastAndroid,
     PixelRatio,
     NativeModules,
 } from 'react-native';
@@ -22,6 +23,7 @@ import React, {
 } from 'react';
 
 import commonStyles from '../styles/common';
+import UserInfo from '../utils/UserInfo';
 import Icon from 'react-native-vector-icons/Ionicons';
 import QNButton from '../component/QNButton';
 import NavigationBar from '../component/NavigationBar';
@@ -35,13 +37,14 @@ var {SmartLinker, QNDeviceInfo} = NativeModules;
 export default class WifiSetting extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
             ssid: '',
-            password: '',
+            password: 'yolandaapg',
             workState: Constant.STATE_IDLE,
             device: {},
             themeColor: null
-        }
+        };
         this.isDestrory = false
     }
 
@@ -128,6 +131,7 @@ export default class WifiSetting extends Component {
                 var mac = device.mac;
                 mac = mac.substr(0, 2) + ':' + mac.substr(2, 2) + ':' + mac.substr(4, 2) + ':' + mac.substr(6, 2) + ':' + mac.substr(8, 2) + ':' + mac.substr(10, 2);
                 device.mac = mac;
+                Alert.alert("拿到了 mac", mac);
                 if (this.isDestrory) {
                     throw "Component is destroy"
                 }
@@ -139,10 +143,13 @@ export default class WifiSetting extends Component {
                 if (this.isDestrory) {
                     throw "Component is destroy"
                 }
+
                 this.setState({
                     device: device,
-                    workState: Constant.STATE_GOT_MODEL
+                    // workState: Constant.STATE_GOT_MODEL
                 })
+
+                this.bindDevice();
             })
             .catch(e => {
                 console.log(e)
@@ -168,11 +175,25 @@ export default class WifiSetting extends Component {
         });
         MeasureHttpClient.bindDevice(scale_name, internal_model, mac, scale_type, device_type)
             .then((device) => {
-                console.log("绑定成功并打印device", device);
-                this.toBindSuccess();
+                console.log("绑定成功device", device);
+                const user_id = UserInfo.getUserId();
+                const time = new Date().getTime() / 1000;
+                MeasureHttpClient.occupyMeasure(time, user_id, mac).then(() => {
+                    this.setState({
+                        workState: Constant.STATE_GOT_MODEL,
+                    });
+                    this.toBindSuccess();
+                }).catch(e => {
+                    console.log(e);
+                    ToastAndroid.show(e.message,ToastAndroid.SHORT);
+                    this.setState({
+                        workState: Constant.STATE_GOT_MODEL,
+                    });
+                });
             })
             .catch(e => {
-                console.log(e)
+                console.log(e);
+                ToastAndroid.show(e.message,ToastAndroid.SHORT);
                 this.setState({
                     workState: Constant.STATE_GOT_MODEL,
                 });
@@ -249,9 +270,16 @@ export default class WifiSetting extends Component {
                 contentView = (
                     <View style={[styles.contentContainer, {alignItems: 'center', justifyContent: 'center'}]}>
                         <Text style={styles.tipText}>搜索结果</Text>
-                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', bottom: 20}}>
+                        {/*<View style={{flex: 1, justifyContent: 'center', alignItems: 'center', bottom: 20}}>*/}
+                            {/*<Text style={{fontSize: 20}}>{this.state.device.model}</Text>*/}
+                        {/*</View>*/}
+
+                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                            <Image source={{uri: this.state.device.brand_info.logo_ico}}
+                                   resizeMode={Image.resizeMode.contain} style={{width: 120, height: 30}}/>
                             <Text style={{fontSize: 20}}>{this.state.device.model}</Text>
                         </View>
+
                         <Spinner size={40} type="Wave" color={this.state.themeColor}/>
                     </View>
                 );

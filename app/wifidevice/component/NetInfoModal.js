@@ -12,7 +12,7 @@ import {
     TouchableHighlight,
 } from 'react-native';
 
-export default class MessageModal extends Component {
+export default class NetInfoModal extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -45,16 +45,13 @@ export default class MessageModal extends Component {
 
     render() {
         var showFlag
-            if(this.state.show){
-                showFlag  = false;
-            }else{
-                showFlag  = this.props.show ? this.props.show : this.state.show;
-            }
+        if (this.state.show) {
+            showFlag = false;
+        } else {
+            showFlag = this.props.show ? this.props.show : this.state.show;
+        }
 
-        const {cancelOnPress, sureOnPress, message} = this.props;
-
-
-        let showMessage = message !== null ? message : "  网络断开了,请检查网络状态";
+        let showMessage = "网络断开了,请检查网络状态";
 
         return (
             <View style={styles.container}>

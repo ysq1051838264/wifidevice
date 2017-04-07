@@ -30,6 +30,14 @@ var Api = {
         session_key = sessionKey;
     },
 
+    savePublicParams(data){
+        public_params.app_revision = data.app_revision;
+        public_params.app_id = data.app_id;
+        public_params.platform = data.platform;
+        public_params.system_type = data.system_type;
+        public_params.cellphone_type = data.cellphone_type;
+    },
+
     serialize: function (obj) {
         var str = [];
         for (var p in obj)
@@ -69,8 +77,10 @@ var Api = {
         return fetch(options.url, options)
             .then((response) => response.json())
             .then(result => {
+                console.log("服务器返回：", result)
                 if (result.status.code != 20000) {
-                    return Promise.reject("请求错误，状态码：" + result.status.code + " " + result.status.message);
+                    console.log("请求错误，状态码：" + result.status.code + " " + result.status.message);
+                    return Promise.reject(result.status);
                 } else {
                     return Promise.resolve(result.data);
                 }

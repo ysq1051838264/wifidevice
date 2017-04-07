@@ -68,7 +68,7 @@ var ReportShared = React.createClass({
             NativeModules.QNReport.fetchReportDataWithDataId(this.props.reportType + "", this.props.dataId + "").then(event => {
                 console.log(event)
                 this.setState({
-                    avatarImg: event.user.avatar,
+                    avaterImg: event.user.avatar,
                     measureTime: event.measureDate,
                     account: event.user.username,
                     score: event.score,
@@ -104,27 +104,15 @@ var ReportShared = React.createClass({
 
     //HeaderView
     renderHeader(){
-
-        var scoreView;
-        if (Platform.OS === 'ios') {
-            scoreView = (<View style={[styles.scoreStyle]}>
-                <Text
-                    style={[styles.scoreLeftStyle, {color: this.props.themeColor}]}>{this.state.score.substr(0, this.state.score.length - 1)}</Text>
-                <Text
-                    style={[styles.scoreRightStyle, {color: this.props.themeColor}]}>{this.state.score.substr(this.state.score.length - 1, 1)}</Text>
-                <Text style={[styles.scoreUnitStyle, {color: this.props.themeColor}]}>分</Text>
-            </View>)
-        } else {
             var f = this.state.score.toFixed(1) * 10;
             const scoreString = f + "分";
             const bigScore = scoreString.substr(0, scoreString.length - 2);
             const smallScore = "." + scoreString.substr(scoreString.length - 2, scoreString.length);
 
-            scoreView = (<View style={styles.scoreStyle}>
+            var scoreView = (<View style={styles.scoreStyle}>
                 <Text style={[styles.scoreLeftStyle, {color: this.props.themeColor}]}>{bigScore}</Text>
                 <Text style={[styles.scoreRightStyle, {color: this.props.themeColor}]}> {smallScore}</Text>
             </View>);
-        }
 
         return (
             <View style={styles.headerViewStyle}>
@@ -147,9 +135,7 @@ var ReportShared = React.createClass({
                 </View>
                 <View style={styles.measureMsgStyle}>
                     {/*分数*/}
-
                     {scoreView}
-
                     {/*体型*/}
                     {this.getBodyShapeImg(this.state.bodyShapeStr)}
                 </View>
@@ -164,23 +150,26 @@ var ReportShared = React.createClass({
         return (
             <View style={styles.cellViewStyle}>
                 {/*图标*/}
-                <View style={{flexDirection: 'row', alignItems: 'center', height: 49}}>
-                    <Image source={this.getScaleIcon(data.title)} style={[styles.scaleIconStyle, {flex: 1}]}/>
-                    <View style={{marginLeft: 10, flexDirection: 'row', height: 49, alignItems: 'center', flex: 9}}>
-                        {/*指标名称*/}
-                        <Text style={[styles.scaleTitleStyle, {flex: 4}]}>{data.title}</Text>
-                        {/*指标数值*/}
-                        <View style={{flex: 3, flexDirection: 'row'}}>
-                            <Text style={styles.scaleValueStyle}>{data.scaleValue}</Text>
-                            <Text style={styles.saleUnitStyle}>{data.unit}</Text>
-                        </View>
-                        {/*指标的判断*/}
-                        <View style={{flex: 3, flexDirection: 'row-reverse'}}><Text
-                            style={[styles.rsTypeStyle, {color: this.getColor(data.rsType)}, {borderColor: this.getColor(data.rsType)}]}>{data.rsType}</Text>
+                <View style={{flexDirection: 'row', alignItems: 'center', height: 50, backgroundColor: 'rgb(230, 230, 230)'}}>
+                    <View style={{width: 42,backgroundColor:'white', height: 50, flexDirection: 'row', alignItems: 'center'}}>
+                        <Image source={this.getScaleIcon(data.title)} style={styles.scaleIconStyle}/>
+                    </View>
+                    <View style={{height: 49, backgroundColor: 'white', width: ScreenWidth - 42}}>
+                        <View style={{flexDirection: 'row', alignItems: 'center',height: 49}} >
+                          {/*指标名称*/}
+                            <Text style={[styles.scaleTitleStyle, {flex: 4}]}>{data.title}</Text>
+                          {/*指标数值*/}
+                            <View style={{flex: 3, flexDirection: 'row'}}>
+                                <Text style={styles.scaleValueStyle}>{data.scaleValue}</Text>
+                                <Text style={styles.saleUnitStyle}>{data.unit}</Text>
+                            </View>
+                          {/*指标的判断*/}
+                            <View style={{flex: 3, flexDirection: 'row-reverse'}}><Text
+                              style={[styles.rsTypeStyle, {color: this.getColor(data.rsType)}, {borderColor: this.getColor(data.rsType)}]}>{data.rsType}</Text>
+                            </View>
                         </View>
                     </View>
                 </View>
-                <View style={styles.lineStyle}></View>
             </View>
         )
     },
@@ -514,15 +503,6 @@ const styles = StyleSheet.create({
         paddingBottom: 2,
         marginRight: 10,
         textAlign: 'center'
-    },
-
-    lineStyle: {
-        position: 'absolute',
-        backgroundColor: 'rgb(230,230,230)',
-        width: ScreenWidth,
-        height: 0.5,
-        bottom: 1,
-        marginLeft: 45,
     },
 });
 

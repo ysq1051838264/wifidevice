@@ -91,7 +91,7 @@ export default class WifiConfigSecond extends Component {
     render() {
         var themeColor = this.state.themeColor;
 
-        let modal = (<NetInfoModal show={this.state.show} message={"网络断开了,请检查网络状态"}/>);
+        let modal = (<NetInfoModal show={this.state.show}/>);
         let view = this.state.show ? modal : null;
 
         return (

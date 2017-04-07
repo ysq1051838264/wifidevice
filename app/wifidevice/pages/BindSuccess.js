@@ -43,14 +43,9 @@ export default class BindSuccess extends Component {
     }
 
     goHome() {
-        NativeModules.AynsMeasureModule.isHaveMeasure()
+        NativeModules.AynsMeasureModule.aynsMeasure()
             .then(data => {
-                console.log("打印isHaveMeasureFalg",data.isHaveMeasureFalg);
-                if (data.isHaveMeasureFalg) {
-                    BackAndroid.exitApp();
-                } else {
-                    this.setState({show: true})
-                }
+                BackAndroid.exitApp();
             })
             .catch(e => {
                 console.log(e.message)
@@ -66,23 +61,8 @@ export default class BindSuccess extends Component {
 
     }
 
-    cancelOnPress = () => {
-        this.setState({show: false,})
-    };
-
-    sureOnPress = () => {
-        this.setState({show: false,});
-        BackAndroid.exitApp();
-    };
-
     render() {
         const {themeColor} = this.state.themeColor;
-
-        let modal = (<MessageModal show={this.state.show} message={"您还未测量，确定要退出么？"}
-                                   cancelOnPress={this.cancelOnPress.bind(this)}
-                                   sureOnPress={this.sureOnPress.bind(this)}/>);
-
-        let view = this.state.show ? modal : null;
 
         return (
             <View style={[commonStyles.main, commonStyles.wrapper]}>
@@ -98,10 +78,6 @@ export default class BindSuccess extends Component {
                 </View>
                 <View style={styles.bottomBar}>
                     <QNButton color={this.state.themeColor} title="测量完成" onPress={this.goHome.bind(this)}/>
-                </View>
-
-                <View style={{justifyContent: 'center', alignItems: 'center',}}>
-                    {view}
                 </View>
 
             </View>

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Navigator} from 'react-native';
 import * as Storage from './utils/Storage';
+import UserInfo from './utils/UserInfo';
 import MainPage from './pages/main';
 import WifiConfigSecond from './pages/WifiConfigSecond';
 import Api from './http/api';
@@ -12,6 +13,8 @@ export default class root extends Component {
 
     componentWillMount() {
         Api.saveSessionKey(this.props.sessionKey);
+        Api.savePublicParams(this.props);
+        UserInfo.saveUserId(this.props);
         Storage.saveSessionKey(this.props.sessionKey);
         Storage.saveThemeColor(this.props.themeColor);
     }
