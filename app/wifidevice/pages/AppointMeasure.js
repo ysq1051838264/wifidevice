@@ -13,7 +13,8 @@ import {
     TouchableOpacity,
     BackAndroid,
     Platform,
-
+    NativeModules,
+    AlertIOS
 } from 'react-native';
 
 
@@ -91,18 +92,19 @@ export default class AppointMeasure extends Component {
         const time = new Date().getTime() / 1000;
         console.log("请求中" + this.state.status);
         MeasureHttpClient.occupyMeasure(time, user_id, mac)
-            .then(() => {
-                console.log("请求成功");
+            .then((data) => {
+                console.log("请求成功",data);
                 this.setState({
                     status: Constant.STATUS_REQUEST_SUCCESS
                 });
                 this.time();
             })
             .catch(e => {
-                console.log(e);
+                console.log("请求出错",e);
                 this.setState({
                     status: Constant.STATUS_NONE
                 });
+              Platform.OS == 'ios' ?  AlertIOS.alert(e["message"]) : ToastAndroid.show(e.message,ToastAndroid.SHORT);
             })
     }
 
@@ -130,7 +132,11 @@ export default class AppointMeasure extends Component {
     }
 
     onPressBack() {
+      if (Platform.OS == 'ios'){
+        NativeModules.QNUI.popViewController();
+      }else {
         BackAndroid.exitApp();
+      }
     }
 
 
@@ -140,6 +146,7 @@ export default class AppointMeasure extends Component {
 
         switch (this.state.status) {
             case Constant.STATUS_NONE: {
+                console.log('请求失败');
                 topTextStr = "";
                 secondStr = "";
                 topEndStr = "";
@@ -166,7 +173,7 @@ export default class AppointMeasure extends Component {
             default:
                 break;
         }
-
+        console.log('重新走',buttonStr);
         return (
             <View style={[commonStyles.main, commonStyles.wrapper]}>
                 <NavigationBar

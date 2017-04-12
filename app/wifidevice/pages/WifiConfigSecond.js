@@ -17,6 +17,7 @@ import  {
     PixelRatio,
     TouchableOpacity,
     NativeModules,
+    ScrollView
 } from 'react-native';
 
 import commonStyles from '../styles/common';
@@ -24,7 +25,8 @@ import QNButton from '../component/QNButton';
 import NavigationBar from '../component/NavigationBar';
 import WifiConfig from './WifiSetting';
 import NetInfoModal from '../component/NetInfoModal';
-
+var Dimensions = require('Dimensions');
+var screenWidth = Dimensions.get('window').width;
 
 export default class WifiConfigSecond extends Component {
     constructor(props) {
@@ -46,7 +48,6 @@ export default class WifiConfigSecond extends Component {
         this.setState({
             themeColor: this.props.themeColor,
         });
-
     }
 
     componentWillUnmount() {
@@ -71,7 +72,6 @@ export default class WifiConfigSecond extends Component {
         console.log("监听网络状态:", status);
 
         if (!status) {
-
             this.setState({
                 show: true
             });
@@ -96,16 +96,26 @@ export default class WifiConfigSecond extends Component {
         let modal = (<NetInfoModal show={this.state.show}/>);
         let view = this.state.show ? modal : null;
 
+        let imgWidth = screenWidth < 360 ? screenWidth : 360
+
         return (
             <View style={[commonStyles.main, commonStyles.wrapper]}>
                 <NavigationBar leftAction={this.backOnPress.bind(this)} title="连接"/>
-                <View style={styles.contentContainer}>
-                    <Image source={require('../imgs/icons/wifi_config_guide_bg.png')}>
-                        <Image source={require('../imgs/icons/wifi_config_guide_fg.png')}
-                               style={{tintColor: themeColor}}/>
-                    </Image>
-                </View>
+                <ScrollView style={styles.contentContainer}
+                            showsVerticalScrollIndicator={false}>
+                    <View style={{alignItems: 'center'}}>
+                        <Image source={require('../imgs/icons/wifi_config_guide_bg.png')}
+                               style={{resizeMode: Image.resizeMode.contain, width: imgWidth}}>
+                            <Image source={require('../imgs/icons/wifi_config_guide_fg.png')}
+                                   style={{
+                                       tintColor: themeColor,
+                                       resizeMode: Image.resizeMode.contain,
+                                       width: imgWidth
+                                   }}/>
+                        </Image>
+                    </View>
 
+                </ScrollView>
                 <View style={styles.bottomBar}>
                     <QNButton color={themeColor} title="下一步" onPress={this._next.bind(this)}/>
                 </View>
@@ -113,19 +123,24 @@ export default class WifiConfigSecond extends Component {
                 <View style={{justifyContent: 'center', alignItems: 'center',}}>
                     {view}
                 </View>
-
             </View>
         );
 
     }
 
     backOnPress() {
-        const nav = this.props.navigator;
+        const {navigator} = this.props;
         const routers = nav.getCurrentRoutes();
         if (routers.length > 1) {
-            nav.pop();
-        }else {
-            BackAndroid.exitApp();
+            navigator.pop();
+        } else {
+            if (navigator) {
+                if (Platform.OS == 'ios') {
+                    NativeModules.QNUI.popViewController();
+                } else {
+                    BackAndroid.exitApp();
+                }
+            }
         }
     }
 
@@ -140,7 +155,6 @@ const styles = StyleSheet.create({
     },
     contentContainer: {
         flex: 1,
-        alignItems: 'center'
     },
     topContainer: {
         marginTop: 20,

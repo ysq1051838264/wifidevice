@@ -20,6 +20,11 @@ export default class NavigationBar extends Component {
         // leftTitle和leftImage 优先判断leftTitle (即 文本按钮和图片按钮优先显示文本按钮)
         const {title, leftTitle, leftImage, leftAction, rightTitle, rightImage, rightAction} = this.props;
 
+      var scaleNum = PixelRatio.get();
+      if (Platform.OS == 'ios' && scaleNum == 3){
+        scaleNum = 2;
+      }
+
         return (
             <View style={styles.barView}>
                 <View style={ styles.showView }>
@@ -37,13 +42,13 @@ export default class NavigationBar extends Component {
                                 } }>
                                     <View style={{alignItems: 'center', width: 50}}>
                                         <Icon name={leftImage}
-                                              size={13 * PixelRatio.get()}/>
+                                              size={13 * scaleNum} color='#B3B3B3'/>
                                     </View>
                                 </TouchableOpacity>
                                 : <TouchableOpacity style={styles.leftImage} onPress={ () => {
                                     leftAction()
-                                } }><View style={{alignItems: 'center', width: 30, justifyContent: 'center'}}>
-                                    <Icon name={"ios-arrow-back"} size={13 * PixelRatio.get()}/>
+                                } }><View style={{alignItems: 'center', width: 30,justifyContent:'center'}}>
+                                    <Icon name={"ios-arrow-back"} size={13 * scaleNum} color='#B3B3B3'/>
                                 </View>
                                 </TouchableOpacity>
                         )}{
@@ -85,7 +90,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flexDirection: 'row',
         marginTop: Platform.OS === 'android' ? 0 : 20,
-        height: 45,
+        height: Platform.OS === 'android' ? 45 : 44,
     },
     title: {
         color: 'black',

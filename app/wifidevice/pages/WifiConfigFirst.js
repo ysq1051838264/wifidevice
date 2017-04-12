@@ -59,17 +59,31 @@ export default class WifiConfigFirst extends Component {
     };
 
     goWifiConfig() {
-        NativeModules.ConnectWiFi.setWiFi().then(data => {
+        console.log('调用原生wifi设置');
+        if (Platform.OS == 'ios'){
+          NativeModules.SmartLinker.getWifiState().then(data => {
             console.log("设置网络之后的传过来的wifi状态：", data.isWiFi)
             if (data.isWiFi) {
-                this.setState({
-                    isWiFiFlag: data.isWiFi,
-                });
+              this.setState({
+                isWiFiFlag: data.isWiFi,
+              });
             }
-        });
+          });
+        }else {
+          NativeModules.ConnectWiFi.setWiFi().then(data => {
+            console.log("设置网络之后的传过来的wifi状态：", data.isWiFi)
+            if (data.isWiFi) {
+              this.setState({
+                isWiFiFlag: data.isWiFi,
+              });
+            }
+          });
+        }
+
     }
 
     _next() {
+        console.log('设置wifi界面');
         const {navigator} = this.props;
         navigator.push({
             component: WifiConfigSecond,
@@ -132,16 +146,16 @@ const styles = StyleSheet.create({
         marginTop: 20,
         paddingHorizontal: 30,
         flexDirection: 'row',
-        justifyContent: 'flex-end',
+        justifyContent: 'space-around',
         alignItems: 'center',
     },
     wifiLogoContainer: {
         padding: 5,
         marginLeft: 40,
         borderWidth: 1,
-        width: 60,
-        height: 60,
-        borderRadius: 30,
+        width: 40,
+        height: 40,
+        borderRadius: 20,
         justifyContent: 'center',
         alignItems: 'center'
     },

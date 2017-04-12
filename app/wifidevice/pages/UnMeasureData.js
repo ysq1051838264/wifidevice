@@ -24,6 +24,7 @@ import {
     Platform,
     ListView,
     Alert,
+    NativeModules,
 } from 'react-native'
 
 var dateFormat = require('dateformat');
@@ -52,6 +53,7 @@ export default class UnMeasureData extends Component {
     componentDidMount() {
         MeasureHttp.fetchUnknownMeasure(this.props.userid, this.props.lastSynTime, this.props.previousDataTime)
             .then(data => {
+                console.log('未知测量数据请求成功',data);
                 this.setState({
                     dataSource: this.state.dataSource.cloneWithRows(data.slice(0)),
                     animateFlag: false
@@ -134,11 +136,11 @@ export default class UnMeasureData extends Component {
             checkView = null
         }
 
-        var dataRowView = (<View style={{backgroundColor: 'white', flexDirection: 'row', height: 50}}>
+        var dataRowView = (<View style={{backgroundColor: 'white', flexDirection: 'row', height: 60}}>
             <View style={{flex: 1}}>
                 <View style={{flexDirection: 'row', marginLeft: 20, marginTop: 5}}>
-                    <Text style={{color: 'black', fontSize: 16}}> {weight} </Text>
-                    <Text> {this.weightUnit} </Text>
+                    <Text style={{color: 'black', fontSize: 20,marginLeft: Platform.OS == 'ios' ? -4 : 0}}> {weight} </Text>
+                    <Text style={{marginTop: 8,fontSize: 11}}> {this.weightUnit} </Text>
                 </View>
                 <Text style={styles.textLeft}>
                     {this.stringToFormatString(rowData.local_updated_at)}
@@ -185,7 +187,11 @@ export default class UnMeasureData extends Component {
     }
 
     onPressBack() {
+      if (Platform.OS == 'ios'){
+        NativeModules.QNUI.popViewController();
+      }else {
         BackAndroid.exitApp();
+      }
     }
 
     onPressCancel() {
@@ -260,7 +266,6 @@ export default class UnMeasureData extends Component {
         }
 
     }
-
     updateData() {
         MeasureHttp.fetchUnknownMeasure(this.props.userid, this.props.lastSynTime, this.props.previousDataTime)
             .then(data => {
@@ -283,11 +288,9 @@ export default class UnMeasureData extends Component {
 
     render() {
         const {dataSource} = this.state;
-
         if (this.state.animateFlag) {
             return <LoadingView animateFlag={this.state.animateFlag}/>;
         }
-
         var view;
         if (this.state.isSelectFlag) {
             view = (<View style={[commonStyles.main, commonStyles.wrapper]}>
@@ -364,15 +367,14 @@ const styles = StyleSheet.create({
     textLeft: {
         marginLeft: 20,
         bottom: 5,
-        marginTop: 5,
+        marginTop: 8,
+        color: '#999999'
     },
 
     bottomButton: {
         height: 50,
         backgroundColor: '#F4F4F4',
         flexDirection: 'row',
-        alignItems: 'flex-end',
-        bottom: 5,
         justifyContent: 'center'
     },
 
@@ -386,6 +388,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginLeft: 15,
         marginRight: 5,
+        height: Platform.OS == 'ios' ? 40 : 45,
+        marginTop: Platform.OS == 'ios' ? 5 : 2.5,
     },
 
     saveButton: {
@@ -395,6 +399,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginRight: 15,
         marginLeft: 5,
+        height: Platform.OS == 'ios' ? 40 : 45,
+        marginTop: Platform.OS == 'ios' ? 5 : 2.5,
     },
 
     lineStyle: {
@@ -402,7 +408,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         backgroundColor: 'rgb(230,230,230)',
         width: Dimensions.get('window').width,
-        height: 1,
+        height: 0.8,
         bottom: 1,
         marginLeft: 20,
     },

@@ -13,6 +13,7 @@ import  {
     Image,
     NetInfo,
     PixelRatio,
+    Platform
 } from 'react-native';
 
 
@@ -43,14 +44,23 @@ export default class BindSuccess extends Component {
     }
 
     goHome() {
-        NativeModules.AynsMeasureModule.aynsMeasure()
+        if (Platform.OS == 'ios'){
+        NativeModules.SmartLinker.anysMesasure()
+          .then(data => {
+            NativeModules.QNUI.popViewController();
+          })
+          .catch(e => {
+            console.log(e.message)
+          });
+        }else {
+          NativeModules.AynsMeasureModule.aynsMeasure()
             .then(data => {
-                BackAndroid.exitApp();
+              BackAndroid.exitApp();
             })
             .catch(e => {
-                console.log(e.message)
+              console.log(e.message)
             });
-        // BackAndroid.exitApp()
+        }
     }
 
     componentWillUnMount() {

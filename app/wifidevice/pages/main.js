@@ -1,5 +1,5 @@
 import React, {
-    Component
+    Component,
 } from 'react';
 
 import  {
@@ -11,6 +11,7 @@ import  {
     PixelRatio,
     BackAndroid,
     NativeModules,
+    Platform
 } from 'react-native';
 
 import NavigationBar from '../component/NavigationBar';
@@ -54,7 +55,11 @@ export default class main extends Component {
     }
 
     onPressBack() {
+      if (Platform.OS == 'ios'){
+        NativeModules.QNUI.popViewController();
+      }else {
         BackAndroid.exitApp();
+      }
     }
 
     goWifiConfigFirst() {

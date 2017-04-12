@@ -16,6 +16,7 @@ import  {
     ToastAndroid,
     PixelRatio,
     NativeModules,
+    AlertIOS,
 } from 'react-native';
 
 import React, {
@@ -40,7 +41,7 @@ export default class WifiSetting extends Component {
 
         this.state = {
             ssid: '',
-            password: 'yolandaapg',
+            password: '',
             workState: Constant.STATE_IDLE,
             device: {},
             themeColor: null
@@ -131,7 +132,7 @@ export default class WifiSetting extends Component {
                 var mac = device.mac;
                 mac = mac.substr(0, 2) + ':' + mac.substr(2, 2) + ':' + mac.substr(4, 2) + ':' + mac.substr(6, 2) + ':' + mac.substr(8, 2) + ':' + mac.substr(10, 2);
                 device.mac = mac;
-                Alert.alert("拿到了 mac", mac);
+                console.log("拿到了 mac", mac);
                 if (this.isDestrory) {
                     throw "Component is destroy"
                 }
@@ -152,7 +153,7 @@ export default class WifiSetting extends Component {
                 this.bindDevice();
             })
             .catch(e => {
-                console.log(e)
+                console.log('配网失败',e)
                 if (this.isDestrory) {
                     return
                 }
@@ -185,7 +186,7 @@ export default class WifiSetting extends Component {
                     this.toBindSuccess();
                 }).catch(e => {
                     console.log(e);
-                    ToastAndroid.show(e.message,ToastAndroid.SHORT);
+                  Platform.OS === 'android'? ToastAndroid.show(e.message,ToastAndroid.SHORT) : AlertIOS.alert(e.message);
                     this.setState({
                         workState: Constant.STATE_GOT_MODEL,
                     });
@@ -193,7 +194,7 @@ export default class WifiSetting extends Component {
             })
             .catch(e => {
                 console.log(e);
-                ToastAndroid.show(e.message,ToastAndroid.SHORT);
+              Platform.OS === 'android'? ToastAndroid.show(e.message,ToastAndroid.SHORT) : AlertIOS.alert(e.message);
                 this.setState({
                     workState: Constant.STATE_GOT_MODEL,
                 });
@@ -238,7 +239,8 @@ export default class WifiSetting extends Component {
                 break;
             }
             case Constant.STATE_FAIL: {
-                contentView = (
+              console.log('配网失败');
+              contentView = (
                     <View style={styles.contentContainer}>
                         <Text style={styles.tipText}>配网失败，试试下面这些步骤</Text>
                         <Text style={[styles.tipText, {marginTop: 20}]}>1. 重新输入WiFi密码，确保密码正确</Text>
@@ -252,7 +254,8 @@ export default class WifiSetting extends Component {
                 break;
             }
             case Constant.STATE_GOT_MODEL: {
-                contentView = (
+              console.log('配网成功');
+              contentView = (
                     <View style={[styles.contentContainer, {alignItems: 'center', justifyContent: 'center'}]}>
                         <Text style={styles.tipText}>搜索结果</Text>
                         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -295,12 +298,12 @@ export default class WifiSetting extends Component {
                 <NavigationBar title="连接" leftAction={this.backOnPress.bind(this)}/>
                 <View style={styles.topContainer}>
                     <View style={styles.formFieldContainer}>
-                        <Icon name="ios-wifi" size={8 * PixelRatio.get()}/>
+                        <Icon name="ios-wifi" size={10 * PixelRatio.get()}/>
                         <Text style={styles.formFieldText}>{this.state.ssid}</Text>
                     </View>
                     <View style={styles.divider}/>
                     <View style={styles.formFieldContainer}>
-                        <Icon name="ios-lock-outline" size={8 * PixelRatio.get()}/>
+                        <Icon name="ios-lock-outline" size={10 * PixelRatio.get()}/>
                         <TextInput placeholder="请输入wifi密码" style={styles.formFieldTextInput}
                                    underlineColorAndroid='transparent'
                                    defaultValue={this.state.password}
