@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import {Navigator} from 'react-native';
 import * as Storage from './utils/Storage';
 import UserInfo from './utils/UserInfo';
-import MainPage from './pages/main';
 import WifiConfigSecond from './pages/WifiConfigSecond';
+import WifiConfigFirst from './pages/WifiConfigFirst';
 import Api from './http/api';
 
 export default class root extends Component {
@@ -47,10 +47,10 @@ export default class root extends Component {
             view = (<Navigator
                 ref={view => this.navigator = view}
                 initialRoute={{
-                    name: 'main-page',
-                    component: MainPage,
+                    component: WifiConfigFirst,
+                    name: 'wifi_config_first',
                     params: {
-                        isWiFiFlag: this.props.isWiFiFlag,
+                        themeColor: this.props.themeColor,
                     }
                 }}
                 configureScene={this.configureScene.bind(this)}

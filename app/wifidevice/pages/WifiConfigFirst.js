@@ -13,6 +13,7 @@ import  {
     Platform,
     BackAndroid,
     PixelRatio,
+    Image,
     NativeModules,
     TouchableOpacity,
 } from 'react-native';
@@ -21,7 +22,6 @@ import commonStyles from '../styles/common';
 import Icon from 'react-native-vector-icons/Ionicons';
 import QNButton from '../component/QNButton';
 import NavigationBar from '../component/NavigationBar';
-import * as Storage from '../utils/Storage';
 import WifiConfigSecond from './WifiConfigSecond';
 
 export default class WifiConfigFirst extends Component {
@@ -60,24 +60,24 @@ export default class WifiConfigFirst extends Component {
 
     goWifiConfig() {
         console.log('调用原生wifi设置');
-        if (Platform.OS == 'ios'){
-          NativeModules.SmartLinker.getWifiState().then(data => {
-            console.log("设置网络之后的传过来的wifi状态：", data.isWiFi)
-            if (data.isWiFi) {
-              this.setState({
-                isWiFiFlag: data.isWiFi,
-              });
-            }
-          });
-        }else {
-          NativeModules.ConnectWiFi.setWiFi().then(data => {
-            console.log("设置网络之后的传过来的wifi状态：", data.isWiFi)
-            if (data.isWiFi) {
-              this.setState({
-                isWiFiFlag: data.isWiFi,
-              });
-            }
-          });
+        if (Platform.OS == 'ios') {
+            NativeModules.SmartLinker.getWifiState().then(data => {
+                console.log("设置网络之后的传过来的wifi状态：", data.isWiFi)
+                if (data.isWiFi) {
+                    this.setState({
+                        isWiFiFlag: data.isWiFi,
+                    });
+                }
+            });
+        } else {
+            NativeModules.ConnectWiFi.setWiFi().then(data => {
+                console.log("设置网络之后的传过来的wifi状态：", data.isWiFi)
+                if (data.isWiFi) {
+                    this.setState({
+                        isWiFiFlag: data.isWiFi,
+                    });
+                }
+            });
         }
 
     }
@@ -95,26 +95,38 @@ export default class WifiConfigFirst extends Component {
     }
 
     backOnPress() {
-        const {navigator} = this.props;
-        if (navigator) {
-            navigator.pop();
+        if (Platform.OS == 'ios') {
+            NativeModules.QNUI.popViewController();
+        } else {
+            BackAndroid.exitApp();
         }
     }
 
     render() {
         var themeColor = this.state.themeColor;
 
+        var wifiStatusView;
         var bottomView;
+
         if (this.state.isWiFiFlag) {
-            bottomView = (
-                <QNButton color={themeColor } title="下一步" onPress={this._next.bind(this)}/>)
+            wifiStatusView = (
+                <View style={styles.wifiStatus}>
+                    <Image source={require('../imgs/icons/wifi_status_flag.png')}
+                           style={{
+                               backgroundColor: themeColor,
+                               width: 60,
+                               height: 60,
+                           }}/>
+                    <Text style={{color: themeColor, marginTop: 10}}> 完成</Text>
+                </View>);
+            bottomView = (<QNButton color={themeColor } title="下一步" onPress={this._next.bind(this)}/>)
         } else {
-            bottomView = (
-                <QNButton color={themeColor } title="下一步" onPress={this.goWifiConfig.bind(this)}/>)
+            wifiStatusView = null
+            bottomView = (<QNButton color={themeColor } title="设置网络" onPress={this.goWifiConfig.bind(this)}/>)
         }
 
         return (
-            <View style={[commonStyles.main, commonStyles.wrapper]}>
+            <View style={[commonStyles.main, commonStyles.wrapper, {backgroundColor: 'white',}]}>
                 <NavigationBar title="连接" leftAction={this.backOnPress.bind(this)}/>
                 <View style={styles.contentContainer}>
                     <View style={styles.topContainer}>
@@ -123,7 +135,12 @@ export default class WifiConfigFirst extends Component {
                             <Icon name="ios-wifi" size={10 * PixelRatio.get()}/>
                         </View>
                     </View>
+
+                    <View style={styles.wifiStatus}>
+                        {wifiStatusView}
+                    </View>
                 </View>
+
                 <View style={styles.bottomBar}>
                     {bottomView}
                 </View>
@@ -137,7 +154,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5FCFF',
+        backgroundColor: 'white',
     },
     contentContainer: {
         flex: 1,
@@ -164,8 +181,15 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginLeft: 20,
     },
+
     bottomBar: {
         height: 60,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    wifiStatus: {
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     }

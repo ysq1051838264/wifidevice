@@ -72,6 +72,7 @@ export default class WifiConfigSecond extends Component {
         console.log("监听网络状态:", status);
 
         if (!status) {
+
             this.setState({
                 show: true
             });
@@ -99,7 +100,7 @@ export default class WifiConfigSecond extends Component {
         let imgWidth = screenWidth < 360 ? screenWidth : 360
 
         return (
-            <View style={[commonStyles.main, commonStyles.wrapper]}>
+            <View style={[commonStyles.main, commonStyles.wrapper,{  backgroundColor: 'white',}]}>
                 <NavigationBar leftAction={this.backOnPress.bind(this)} title="连接"/>
                 <ScrollView style={styles.contentContainer}
                             showsVerticalScrollIndicator={false}>
@@ -130,7 +131,7 @@ export default class WifiConfigSecond extends Component {
 
     backOnPress() {
         const {navigator} = this.props;
-        const routers = nav.getCurrentRoutes();
+        const routers = navigator.getCurrentRoutes();
         if (routers.length > 1) {
             navigator.pop();
         } else {
@@ -151,7 +152,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5FCFF',
+        backgroundColor: 'white',
     },
     contentContainer: {
         flex: 1,

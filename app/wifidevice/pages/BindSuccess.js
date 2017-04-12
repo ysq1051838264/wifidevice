@@ -44,22 +44,22 @@ export default class BindSuccess extends Component {
     }
 
     goHome() {
-        if (Platform.OS == 'ios'){
-        NativeModules.SmartLinker.anysMesasure()
-          .then(data => {
-            NativeModules.QNUI.popViewController();
-          })
-          .catch(e => {
-            console.log(e.message)
-          });
-        }else {
-          NativeModules.AynsMeasureModule.aynsMeasure()
-            .then(data => {
-              BackAndroid.exitApp();
-            })
-            .catch(e => {
-              console.log(e.message)
-            });
+        if (Platform.OS == 'ios') {
+            NativeModules.SmartLinker.anysMesasure()
+                .then(data => {
+                    NativeModules.QNUI.popViewController();
+                })
+                .catch(e => {
+                    console.log(e.message)
+                });
+        } else {
+            NativeModules.AynsMeasureModule.aynsMeasure()
+                .then(data => {
+                    BackAndroid.exitApp();
+                })
+                .catch(e => {
+                    console.log(e.message)
+                });
         }
     }
 
