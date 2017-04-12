@@ -33,7 +33,6 @@ export default class WifiConfigSecond extends Component {
         this.state = {
             themeColor: null,
             show: false,
-            mainFlag:false,
         }
     }
 
