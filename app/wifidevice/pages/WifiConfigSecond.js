@@ -29,9 +29,11 @@ import NetInfoModal from '../component/NetInfoModal';
 export default class WifiConfigSecond extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
             themeColor: null,
             show: false,
+            mainFlag:false,
         }
     }
 
@@ -45,6 +47,7 @@ export default class WifiConfigSecond extends Component {
         this.setState({
             themeColor: this.props.themeColor,
         });
+
     }
 
     componentWillUnmount() {
@@ -118,9 +121,12 @@ export default class WifiConfigSecond extends Component {
     }
 
     backOnPress() {
-        const {navigator} = this.props;
-        if (navigator) {
-            navigator.pop();
+        const nav = this.props.navigator;
+        const routers = nav.getCurrentRoutes();
+        if (routers.length > 1) {
+            nav.pop();
+        }else {
+            BackAndroid.exitApp();
         }
     }
 

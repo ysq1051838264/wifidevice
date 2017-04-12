@@ -42,7 +42,7 @@ export default class NavigationBar extends Component {
                                 </TouchableOpacity>
                                 : <TouchableOpacity style={styles.leftImage} onPress={ () => {
                                     leftAction()
-                                } }><View style={{alignItems: 'center', width: 30}}>
+                                } }><View style={{alignItems: 'center', width: 30, justifyContent: 'center'}}>
                                     <Icon name={"ios-arrow-back"} size={13 * PixelRatio.get()}/>
                                 </View>
                                 </TouchableOpacity>
