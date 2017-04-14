@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component,PropTypes} from 'react';
 import {
     View,
     Text,
@@ -10,19 +10,35 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
+import LoadingView from './LoadingView';
 
 export default class NavigationBar extends Component {
     constructor(props) {
         super(props);
     }
 
+    static propTypes = {
+        color: PropTypes.string,
+    };
+
+
     render() {
         // leftTitle和leftImage 优先判断leftTitle (即 文本按钮和图片按钮优先显示文本按钮)
-        const {title, leftTitle, leftImage, leftAction, rightTitle, rightImage, rightAction} = this.props;
+        const {title, leftTitle, leftImage, leftAction, rightTitle, rightImage, rightAction, animateFlag} = this.props;
 
         var scaleNum = PixelRatio.get();
         if (Platform.OS == 'ios' && scaleNum == 3) {
             scaleNum = 2;
+        }
+
+        var themeColor = this.props.color ? this.props.color : 'black';
+        var color = this.props.color ? this.props.color : "#3e9ce9";
+
+        var loadingView;
+        if (animateFlag) {
+            loadingView = (<LoadingView animateFlag={this.props.animateFlag} size={"small"} color={color}/>)
+        } else {
+            loadingView = null
         }
 
         return (
@@ -33,7 +49,7 @@ export default class NavigationBar extends Component {
                             leftAction()
                         } }>
                             <View style={{alignItems: 'center'}}>
-                                <Text style={styles.barButton}>{leftTitle}</Text>
+                                <Text style={[styles.barButton,{color:themeColor}]}>{leftTitle}</Text>
                             </View>
                         </TouchableOpacity>
                         : (leftImage ?
@@ -52,12 +68,21 @@ export default class NavigationBar extends Component {
                                 </View>
                                 </TouchableOpacity>
                         )}{
-                    title ? <Text style={styles.title}>{title || ''}</Text> : null}{
-                    rightTitle ? <TouchableOpacity style={styles.rightNav} onPress={ () => {
-                            rightAction()
-                        } }>
+                    <View style={{flexDirection: "row", alignItems: 'center', justifyContent: 'center',}}>
+                        {{title} ? <Text style={styles.title}>{title || ''}</Text> : null}
+                        <View style={{
+                            marginLeft: 90,
+                            position: 'absolute',
+                            bottom: 2,
+                            top:2,
+                        }}>{loadingView}</View>
+                    </View>}{
+                    rightTitle ? <TouchableOpacity style={styles.rightNav}
+                                                   onPress={ () => {
+                                                       rightAction()
+                                                   } }>
                             <View style={{alignItems: 'center'}}>
-                                <Text style={styles.barButton}>{rightTitle}</Text>
+                                <Text style={[styles.barButton,{color:themeColor}]}>{rightTitle}</Text>
                             </View>
                         </TouchableOpacity>
                         : (rightImage ?
@@ -94,6 +119,9 @@ const styles = StyleSheet.create({
     },
     title: {
         color: 'black',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
         fontSize: 16.0,
     },
     leftNav: {

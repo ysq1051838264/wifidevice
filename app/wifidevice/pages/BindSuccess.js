@@ -11,6 +11,7 @@ import  {
     BackAndroid,
     NativeModules,
     Image,
+    ToastAndroid,
     NetInfo,
     PixelRatio,
     Platform
@@ -32,20 +33,26 @@ export default class BindSuccess extends Component {
         super(props);
         this.state = {
             show: false,
-            themeColor: null
+            themeColor: null,
+            mac: null,
         }
     }
 
     componentWillMount() {
         NetInfo.isConnected.addEventListener("change", this.connectivityChange.bind(this));
+        if (Platform.OS === 'android') {
+            BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
+        }
+
         this.setState({
+            mac: this.props.mac,
             themeColor: this.props.themeColor,
         });
     }
 
     goHome() {
         if (Platform.OS == 'ios') {
-            NativeModules.SmartLinker.anysMesasure()
+            NativeModules.SmartLinker.anysMesasure(mac)
                 .then(data => {
                     NativeModules.QNUI.popViewController();
                 })
@@ -53,9 +60,32 @@ export default class BindSuccess extends Component {
                     console.log(e.message)
                 });
         } else {
-            NativeModules.AynsMeasureModule.aynsMeasure()
+            BackAndroid.exitApp();
+        }
+    }
+
+    onBackAndroid = () => {
+        BackAndroid.exitApp();
+        return false;
+    };
+
+    checkData() {
+        if (Platform.OS == 'ios') {
+            NativeModules.SmartLinker.anysMesasure(this.state.mac)
                 .then(data => {
-                    BackAndroid.exitApp();
+                    NativeModules.QNUI.popViewController();
+                })
+                .catch(e => {
+                    console.log(e.message)
+                });
+        } else {
+            NativeModules.AynsMeasureModule.aynsMeasure(this.state.mac)
+                .then(data => {
+                    if (data.isHaveMeasureFlag) {
+                        NativeModules.AynsMeasureModule.toMeasureView()
+                    } else {
+                        ToastAndroid.show("暂时没有测量数据，请上称在测量一次", ToastAndroid.SHORT)
+                    }
                 })
                 .catch(e => {
                     console.log(e.message)
@@ -65,6 +95,9 @@ export default class BindSuccess extends Component {
 
     componentWillUnMount() {
         NetInfo.isConnected.removeEventListener("change", this.connectivityChange.bind(this));
+        if (Platform.OS === 'android') {
+            BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+        }
     }
 
     connectivityChange(status) {
@@ -87,7 +120,7 @@ export default class BindSuccess extends Component {
                     <Image style={{marginTop: 30}} source={require('../imgs/icons/measure.png')}/>
                 </View>
                 <View style={styles.bottomBar}>
-                    <QNButton color={this.state.themeColor} title="测量完成" onPress={this.goHome.bind(this)}/>
+                    <QNButton color={this.state.themeColor} title="测量完成" onPress={this.checkData.bind(this)}/>
                 </View>
 
             </View>

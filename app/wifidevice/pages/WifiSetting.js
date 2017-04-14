@@ -41,7 +41,7 @@ export default class WifiSetting extends Component {
 
         this.state = {
             ssid: '',
-            password: '',
+            password: '12345678910',
             workState: Constant.STATE_IDLE,
             device: {},
             themeColor: null
@@ -84,6 +84,7 @@ export default class WifiSetting extends Component {
             name: 'bind_success',
             params: {
                 themeColor: this.state.themeColor,
+                mac: this.state.device.mac
             }
         });
     }
@@ -105,7 +106,6 @@ export default class WifiSetting extends Component {
         console.log("监听网络状态:", status);
 
         if (!status) {
-            // Alert.alert("温馨提示", "网络已断开，请检查网络");
             this.stopConfig();
             this.setState({
                 device: {},
@@ -153,7 +153,7 @@ export default class WifiSetting extends Component {
                 this.bindDevice();
             })
             .catch(e => {
-                console.log('配网失败',e)
+                console.log('配网失败', e)
                 if (this.isDestrory) {
                     return
                 }
@@ -176,25 +176,14 @@ export default class WifiSetting extends Component {
         });
         MeasureHttpClient.bindDevice(scale_name, internal_model, mac, scale_type, device_type)
             .then((device) => {
-                console.log("绑定成功device", device);
-                const user_id = UserInfo.getUserId();
-                const time = new Date().getTime() / 1000;
-                MeasureHttpClient.occupyMeasure(time, user_id, mac).then(() => {
-                    this.setState({
-                        workState: Constant.STATE_GOT_MODEL,
-                    });
-                    this.toBindSuccess();
-                }).catch(e => {
-                    console.log(e);
-                  Platform.OS === 'android'? ToastAndroid.show(e.message,ToastAndroid.SHORT) : AlertIOS.alert(e.message);
-                    this.setState({
-                        workState: Constant.STATE_GOT_MODEL,
-                    });
+                this.setState({
+                    workState: Constant.STATE_GOT_MODEL,
                 });
+                this.toBindSuccess();
             })
             .catch(e => {
                 console.log(e);
-              Platform.OS === 'android'? ToastAndroid.show(e.message,ToastAndroid.SHORT) : AlertIOS.alert(e.message);
+                Platform.OS === 'android' ? ToastAndroid.show(e.message, ToastAndroid.SHORT) : AlertIOS.alert(e.message);
                 this.setState({
                     workState: Constant.STATE_GOT_MODEL,
                 });
@@ -214,13 +203,13 @@ export default class WifiSetting extends Component {
         switch (this.state.workState) {
             case Constant.STATE_IDLE: {
                 contentView = (
-                <View style={styles.container}>
-                  <View style={styles.contentContainer}>
-                    <Text style={styles.tipText}>1. 输入您的wifi密码（未设置密码则无需密码）</Text>
-                    <Text style={styles.tipText}>2. 点击“开始配网”，启动配网</Text>
-                    <Text style={[styles.tipText, {marginTop: 25}]}>配网过程中，请保持wifi连接状态</Text>
-                  </View>
-                </View>
+                    <View style={styles.container}>
+                        <View style={styles.contentContainer}>
+                            <Text style={styles.tipText}>1. 输入您的wifi密码（未设置密码则无需密码）</Text>
+                            <Text style={styles.tipText}>2. 点击“开始配网”，启动配网</Text>
+                            <Text style={[styles.tipText, {marginTop: 25}]}>配网过程中，请保持wifi连接状态</Text>
+                        </View>
+                    </View>
                 );
                 pressAction = this.startConfig;
                 buttonTitle = "开始配网";
@@ -229,14 +218,14 @@ export default class WifiSetting extends Component {
 
             case Constant.STATE_SETTING_WIFI: {
                 contentView = (
-                <View style={styles.container}>
-                  <View style={[styles.contentContainer, {alignItems: 'center'}]}>
-                    <Text style={styles.tipText}>设置网络可能需要 20s 左右，请耐心等待...</Text>
-                    <View style={{flex: 1, justifyContent: 'center'}}>
-                      <Spinner size={100} type="Bounce" color={this.state.themeColor}/>
+                    <View style={styles.container}>
+                        <View style={[styles.contentContainer, {alignItems: 'center'}]}>
+                            <Text style={styles.tipText}>设置网络可能需要 20s 左右，请耐心等待...</Text>
+                            <View style={{flex: 1, justifyContent: 'center'}}>
+                                <Spinner size={100} type="Bounce" color={this.state.themeColor}/>
+                            </View>
+                        </View>
                     </View>
-                  </View>
-                </View>
 
                 );
                 pressAction = this.stopConfig;
@@ -244,35 +233,35 @@ export default class WifiSetting extends Component {
                 break;
             }
             case Constant.STATE_FAIL: {
-              console.log('配网失败');
-              contentView = (
-              <View style={styles.container}>
-                <View style={styles.contentContainer}>
-                  <Text style={styles.tipText}>配网失败，试试下面这些步骤</Text>
-                  <Text style={[styles.tipText, {marginTop: 20}]}>1. 重新输入WiFi密码，确保密码正确</Text>
-                  <Text style={styles.tipText}>2. 检查wifi信号强度，确保wifi连接状态良好</Text>
-                  <Text style={styles.tipText}>3. 重新启动秤端配网模式，具体方法参考上一页面</Text>
-                  <Text style={styles.tipText}>4. 确认Wifi允许陌生设备接入</Text>
-                </View>
-              </View>
+                console.log('配网失败');
+                contentView = (
+                    <View style={styles.container}>
+                        <View style={styles.contentContainer}>
+                            <Text style={styles.tipText}>配网失败，试试下面这些步骤</Text>
+                            <Text style={[styles.tipText, {marginTop: 20}]}>1. 重新输入WiFi密码，确保密码正确</Text>
+                            <Text style={styles.tipText}>2. 检查wifi信号强度，确保wifi连接状态良好</Text>
+                            <Text style={styles.tipText}>3. 重新启动秤端配网模式，具体方法参考上一页面</Text>
+                            <Text style={styles.tipText}>4. 确认Wifi允许陌生设备接入</Text>
+                        </View>
+                    </View>
                 );
                 pressAction = this.startConfig;
                 buttonTitle = "重新配网";
                 break;
             }
             case Constant.STATE_GOT_MODEL: {
-              console.log('配网成功');
-              contentView = (
-              <View style={styles.container}>
-                <View style={[styles.contentContainer, {alignItems: 'center', justifyContent: 'center'}]}>
-                  <Text style={styles.tipText}>搜索结果</Text>
-                  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                    <Image source={{uri: this.state.device.brand_info.logo_ico}}
-                           resizeMode={Image.resizeMode.contain} style={{width: 120, height: 30}}/>
-                    <Text style={{fontSize: 20}}>{this.state.device.model}</Text>
-                  </View>
-                </View>
-              </View>
+                console.log('配网成功');
+                contentView = (
+                    <View style={styles.container}>
+                        <View style={[styles.contentContainer, {alignItems: 'center', justifyContent: 'center'}]}>
+                            <Text style={styles.tipText}>搜索结果</Text>
+                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                <Image source={{uri: this.state.device.brand_info.logo_ico}}
+                                       resizeMode={Image.resizeMode.contain} style={{width: 120, height: 30}}/>
+                                <Text style={{fontSize: 20}}>{this.state.device.model}</Text>
+                            </View>
+                        </View>
+                    </View>
                 );
                 pressAction = this.bindDevice;
                 buttonTitle = "马上绑定";
@@ -280,22 +269,22 @@ export default class WifiSetting extends Component {
             }
             case Constant.STATE_BINDING: {
                 contentView = (
-                <View style={styles.container}>
-                  <View style={[styles.contentContainer, {alignItems: 'center', justifyContent: 'center'}]}>
-                    <Text style={styles.tipText}>搜索结果</Text>
-                    {/*<View style={{flex: 1, justifyContent: 'center', alignItems: 'center', bottom: 20}}>*/}
-                    {/*<Text style={{fontSize: 20}}>{this.state.device.model}</Text>*/}
-                    {/*</View>*/}
+                    <View style={styles.container}>
+                        <View style={[styles.contentContainer, {alignItems: 'center', justifyContent: 'center'}]}>
+                            <Text style={styles.tipText}>搜索结果</Text>
+                            {/*<View style={{flex: 1, justifyContent: 'center', alignItems: 'center', bottom: 20}}>*/}
+                            {/*<Text style={{fontSize: 20}}>{this.state.device.model}</Text>*/}
+                            {/*</View>*/}
 
-                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                      <Image source={{uri: this.state.device.brand_info.logo_ico}}
-                             resizeMode={Image.resizeMode.contain} style={{width: 120, height: 30}}/>
-                      <Text style={{fontSize: 20}}>{this.state.device.model}</Text>
+                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                <Image source={{uri: this.state.device.brand_info.logo_ico}}
+                                       resizeMode={Image.resizeMode.contain} style={{width: 120, height: 30}}/>
+                                <Text style={{fontSize: 20}}>{this.state.device.model}</Text>
+                            </View>
+
+                            <Spinner size={40} type="Wave" color={this.state.themeColor}/>
+                        </View>
                     </View>
-
-                    <Spinner size={40} type="Wave" color={this.state.themeColor}/>
-                  </View>
-                </View>
                 );
                 pressAction = () => {
                 };
@@ -318,6 +307,7 @@ export default class WifiSetting extends Component {
                         <TextInput placeholder="请输入wifi密码" style={styles.formFieldTextInput}
                                    underlineColorAndroid='transparent'
                                    defaultValue={this.state.password}
+                                   secureTextEntry={true}
                                    onChangeText={(text) => this.setState({password: text})}/>
                     </View>
                 </View>

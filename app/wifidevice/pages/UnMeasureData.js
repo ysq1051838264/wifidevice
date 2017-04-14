@@ -23,6 +23,8 @@ import {
     BackAndroid,
     Platform,
     ListView,
+    ToastAndroid,
+    AlertIOS,
     Alert,
     NativeModules,
 } from 'react-native'
@@ -45,7 +47,8 @@ export default class UnMeasureData extends Component {
 
         this.state = {
             animateFlag: true,
-            isSelectFlag: false,
+            isSelectFlag: true,
+            loadingFlag: false,
             dataSource: ds,
         };
     }
@@ -53,7 +56,7 @@ export default class UnMeasureData extends Component {
     componentDidMount() {
         MeasureHttp.fetchUnknownMeasure(this.props.userid, this.props.lastSynTime, this.props.previousDataTime)
             .then(data => {
-                console.log('未知测量数据请求成功',data);
+                console.log('未知测量数据请求成功', data);
                 this.setState({
                     dataSource: this.state.dataSource.cloneWithRows(data.slice(0)),
                     animateFlag: false
@@ -69,9 +72,6 @@ export default class UnMeasureData extends Component {
         if (Platform.OS === 'android') {
             BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
         }
-
-        console.log("打印传过来的值：" + this.props.weightUnit + this.props.cellphone_type);
-
         this.weightUnit = this.props.weightUnit;
 
         Api.saveSessionKey(this.props.sessionKey);
@@ -122,29 +122,25 @@ export default class UnMeasureData extends Component {
         } else
             weight = rowData.weight;
 
-        console.log("打印rowData.isSelected  " + rowID + "  --  " + rowData.isSelected)
-
         var checkView;
         if (rowData.isSelected) {
             checkView = (<View style={styles.checkView}>
                     <Icon name={'check-circle'}
                           size={PixelRatio.getPixelSizeForLayoutSize(12)}
-                          color="#00B4F7"></Icon>
+                          color={themeColor}></Icon>
                 </View>
             )
         } else {
             checkView = null
         }
 
-        var dataRowView = (<View style={{backgroundColor: 'white', flexDirection: 'row', height: 60}}>
+        var dataRowView = (<View style={{backgroundColor: 'white', flexDirection: 'row', height: 54}}>
             <View style={{flex: 1}}>
-                <View style={{flexDirection: 'row', marginLeft: 20, marginTop: 5}}>
-                    <Text style={{color: 'black', fontSize: 20,marginLeft: Platform.OS == 'ios' ? -4 : 0}}> {weight} </Text>
-                    <Text style={{marginTop: 8,fontSize: 11}}> {this.weightUnit} </Text>
+                <View style={{flexDirection: 'row', marginLeft: 15, marginTop: 3}}>
+                    <Text style={{color: 'black', fontSize: 20,}}> {weight} </Text>
+                    <Text style={{marginTop: 8, color: 'black', fontSize: 11}}> {this.weightUnit} </Text>
                 </View>
-                <Text style={styles.textLeft}>
-                    {this.stringToFormatString(rowData.local_updated_at)}
-                </Text>
+                <Text style={styles.textLeft}>{this.stringToFormatString(rowData.local_updated_at)}</Text>
             </View>
             {checkView}
             <View style={styles.lineStyle}/>
@@ -187,11 +183,11 @@ export default class UnMeasureData extends Component {
     }
 
     onPressBack() {
-      if (Platform.OS == 'ios'){
-        NativeModules.QNUI.popViewController();
-      }else {
-        BackAndroid.exitApp();
-      }
+        if (Platform.OS == 'ios') {
+            NativeModules.QNUI.popViewController();
+        } else {
+            BackAndroid.exitApp();
+        }
     }
 
     onPressCancel() {
@@ -218,7 +214,7 @@ export default class UnMeasureData extends Component {
         var string = '';
         let flag = false
         if (this.listData.findIndex(item => item.isSelected == true) == -1) {
-            Alert.alert('温馨提醒', '没有选中任何数据');
+            Platform.OS === 'android' ? ToastAndroid.show("亲，您未选中任何数据哦~", ToastAndroid.SHORT) : AlertIOS.alert("亲，您未选中任何数据哦~");
             return;
         } else {
             var length = this.listData.length;
@@ -228,14 +224,14 @@ export default class UnMeasureData extends Component {
                     var value = this.listData[i].data_id;
                     if (i < this.listData.length - 1) {
                         if (flag)
-                            string = string + "," + value
+                            string = string + "," + value;
                         else {
                             flag = true
                             string = string + value
                         }
                     } else {
                         if (flag)
-                            string = string + "," + value
+                            string = string + "," + value;
                         else
                             string = string + value
                     }
@@ -244,18 +240,30 @@ export default class UnMeasureData extends Component {
         }
 
         if (deleteFlag) {
-            console.log("删除最后的值", string)
-            MeasureHttp.deleteInvalidData(string)
-                .then(flag => {
-                    console.log("打印删除之后的值", flag)
-                    this.updateData();
-                })
-                .catch(e => {
-                    console.log("请求失败", e)
-                });
+            console.log("删除最后的值", string);
+            NativeModules.QNUI.onMessageDailog("您确定要删除么？")
+                .then(data => {
+                    if (data.tipsFlag) {
+
+                        this.setState({
+                            loadingFlag: true,
+                        });
+
+                        MeasureHttp.deleteInvalidData(string)
+                            .then(flag => {
+                                this.updateData();
+                            })
+                            .catch(e => {
+                                console.log("请求失败", e)
+                            });
+
+                    }
+                }).catch(e => {
+                console.log(e.message)
+            });
 
         } else {
-            console.log("配对最后的值", string)
+            console.log("配对最后的值", string);
             MeasureHttp.assignInvalidData(this.props.userid, string)
                 .then(data => {
                     this.updateData();
@@ -266,11 +274,13 @@ export default class UnMeasureData extends Component {
         }
 
     }
+
     updateData() {
         MeasureHttp.fetchUnknownMeasure(this.props.userid, this.props.lastSynTime, this.props.previousDataTime)
             .then(data => {
                 this.setState({
                     dataSource: this.state.dataSource.cloneWithRows(data.slice(0)),
+                    loadingFlag: false,
                 });
                 this.listData = data;
             })
@@ -289,14 +299,19 @@ export default class UnMeasureData extends Component {
     render() {
         const {dataSource} = this.state;
         if (this.state.animateFlag) {
-            return <LoadingView animateFlag={this.state.animateFlag}/>;
+            return <LoadingView animateFlag={this.state.animateFlag} color={this.props.themeColor}/>;
         }
+
+        var loadingView = (<LoadingView animateFlag={this.state.animateFlag}/>);
+
         var view;
         if (this.state.isSelectFlag) {
             view = (<View style={[commonStyles.main, commonStyles.wrapper]}>
                 <NavigationBar title={'未知测量'} leftTitle={'取消'}
+                               color={this.props.themeColor}
                                leftAction={this.onPressCancel.bind(this)}
                                rightTitle={'全选'}
+                               animateFlag={this.state.loadingFlag}
                                rightAction={this.onPressAllSelect.bind(this)}/>
                 <View
                     style={styles.container}>
@@ -324,10 +339,10 @@ export default class UnMeasureData extends Component {
         } else {
             view = (<View style={[commonStyles.main, commonStyles.wrapper]}>
                 <NavigationBar title={'未知测量'} rightTitle={'选取'}
+                               color={this.props.themeColor}
                                leftAction={this.onPressBack.bind(this)}
                                rightAction={this.onPressSelectData.bind(this)}/>
-                <View
-                    style={styles.container}>
+                <View style={styles.container}>
                     <ListView
                         dataSource={dataSource}
                         renderRow={this._renderRow.bind(this)}/>
@@ -336,7 +351,7 @@ export default class UnMeasureData extends Component {
         }
 
         return (
-            <View style={[commonStyles.main, commonStyles.wrapper]}>
+            <View style={[commonStyles.main, commonStyles.wrapper, {backgroundColor: 'white'}]}>
                 {view}
             </View>
         );
@@ -346,6 +361,7 @@ export default class UnMeasureData extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: 'white'
     },
 
     header: {
@@ -367,7 +383,7 @@ const styles = StyleSheet.create({
     textLeft: {
         marginLeft: 20,
         bottom: 5,
-        marginTop: 8,
+        marginTop: 4,
         color: '#999999'
     },
 
@@ -381,34 +397,34 @@ const styles = StyleSheet.create({
     deleteButton: {
         flex: 1,
         backgroundColor: 'white',
-        borderRadius: 20,
-        borderWidth: 1,
+        borderRadius: 23,
+        borderWidth: 0.5,
         borderColor: '#999999',
         justifyContent: 'center',
         alignItems: 'center',
         marginLeft: 15,
-        marginRight: 5,
+        marginRight: 8,
         height: Platform.OS == 'ios' ? 40 : 45,
-        marginTop: Platform.OS == 'ios' ? 5 : 2.5,
+        marginTop: Platform.OS == 'ios' ? 5 : 3,
     },
 
     saveButton: {
         flex: 1,
-        borderRadius: 20,
+        borderRadius: 23,
         justifyContent: 'center',
         alignItems: 'center',
         marginRight: 15,
-        marginLeft: 5,
+        marginLeft: 8,
         height: Platform.OS == 'ios' ? 40 : 45,
-        marginTop: Platform.OS == 'ios' ? 5 : 2.5,
+        marginTop: Platform.OS == 'ios' ? 5 : 3,
     },
 
     lineStyle: {
         flex: 1,
         position: 'absolute',
-        backgroundColor: 'rgb(230,230,230)',
+        backgroundColor: '#E6E6E6',
         width: Dimensions.get('window').width,
-        height: 0.8,
+        height: 0.5,
         bottom: 1,
         marginLeft: 20,
     },

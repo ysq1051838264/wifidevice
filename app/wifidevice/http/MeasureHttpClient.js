@@ -14,7 +14,7 @@ export default class MeasureActions {
 
     static fetchScaleNameAndInternalModel(device) {
         const mac = device["mac"];
-        console.log("打印mac地址：", mac)
+        console.log("打印mac地址：", mac);
         return Api.doPost(path_get_device_model, {mac: mac})
             .then((device1) => {
                 device1["mac"] = mac;
@@ -40,6 +40,7 @@ export default class MeasureActions {
             scale_name: scale_name,
             internal_model: internalModel,
             mac: mac,
+            bind_link:1,
             scale_type: scale_type,
             device_type: device_type,
         }), Api.timeout()]);

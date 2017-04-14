@@ -21,16 +21,21 @@ export default class LoadingView extends Component {
 
     static propTypes = {
         animateFlag: PropTypes.bool,
+        size: PropTypes.string,
+        color: PropTypes.string,
     }
 
     render() {
         var flag = this.props.animateFlag ? this.props.animateFlag : false;
+        var size = this.props.size ? this.props.size : "large";
+        var color = this.props.color ? this.props.color : "#3e9ce9";
+
         return (<View style={styles.loading}>
             <ActivityIndicator
                 style={styles.centering}
                 animating={flag}
-                size="large"
-                color="#3e9ce9"/>
+                size={size}
+                color={color}/>
         </View>);
     }
 
@@ -46,7 +51,5 @@ const styles = StyleSheet.create({
     centering: {
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 8,
-        height: 80
     },
 });
