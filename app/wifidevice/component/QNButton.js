@@ -24,6 +24,8 @@ export default class QNButton extends Component {
         enable: PropTypes.bool,
         textStyle: Text.propTypes.style,
         btnStyle: TouchableHighlight.propTypes.style,
+        underlayColor: PropTypes.string,
+        activeOpacity: PropTypes.number,
     };
 
     static defaultProps = {
@@ -43,7 +45,7 @@ export default class QNButton extends Component {
         const textColor = this.props.textColor;
         const disableColor = "#999";
 
-        this.underlayColor =  enable ? bgColor : disableColor;
+        this.underlayColor = enable ? bgColor : disableColor;
 
         this.styles = StyleSheet.create({
             buttonBg: {
@@ -64,8 +66,8 @@ export default class QNButton extends Component {
 
     render() {
         return (<TouchableHighlight
-            underlayColor={this.underlayColor+"88"}
-            activeOpacity={0.1}
+            underlayColor={this.props.underlayColor ? this.props.underlayColor : this.underlayColor + "88"}
+            activeOpacity={this.props.activeOpacity ? this.props.activeOpacity : 0.1}
             onPress={this.props.onPress}
             style={[this.styles.buttonBg, this.props.btnStyle]}>
             <Text style={[this.styles.buttonText, this.props.textStyle]}>{this.props.title}</Text>

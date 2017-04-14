@@ -94,7 +94,7 @@ export default class WifiConfigSecond extends Component {
     render() {
         var themeColor = this.state.themeColor;
 
-        let modal = (<NetInfoModal show={this.state.show}/>);
+        let modal = (<NetInfoModal show={this.state.show} navigator={this.props.navigator}   themeColor ={this.props.themeColor} />);
         let view = this.state.show ? modal : null;
 
         let imgWidth = screenWidth < 360 ? screenWidth : 360

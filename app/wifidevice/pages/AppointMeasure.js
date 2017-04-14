@@ -14,7 +14,8 @@ import {
     BackAndroid,
     Platform,
     NativeModules,
-    AlertIOS
+    AlertIOS,
+    ToastAndroid,
 } from 'react-native';
 
 
@@ -41,7 +42,7 @@ export default class AppointMeasure extends Component {
         super(props);
         this.state = {
             themeColor: null,
-            seconds: 30,
+            seconds: 120,
             userId: 0,
             mac: '',
             status: Constant.STATUS_NONE,
@@ -91,20 +92,20 @@ export default class AppointMeasure extends Component {
         const user_id = this.props.userId;
         const time = new Date().getTime() / 1000;
         console.log("请求中" + this.state.status);
+        this.time();
         MeasureHttpClient.occupyMeasure(time, user_id, mac)
             .then((data) => {
-                console.log("请求成功",data);
+                console.log("请求成功", data);
                 this.setState({
                     status: Constant.STATUS_REQUEST_SUCCESS
                 });
-                this.time();
             })
             .catch(e => {
-                console.log("请求出错",e);
+                console.log("请求出错", e);
                 this.setState({
                     status: Constant.STATUS_NONE
                 });
-              Platform.OS == 'ios' ?  AlertIOS.alert(e["message"]) : ToastAndroid.show(e.message,ToastAndroid.SHORT);
+                Platform.OS == 'ios' ? AlertIOS.alert(e["message"]) : ToastAndroid.show(e.message, ToastAndroid.SHORT);
             })
     }
 
@@ -112,14 +113,14 @@ export default class AppointMeasure extends Component {
         this.interval && clearInterval(this.interval);
         this.setState({
             status: Constant.STATUS_NONE,
-            seconds: 30,
+            seconds: 120,
         });
     }
 
     // 倒计时
     time() {
         this.setState({
-            seconds: 30,
+            seconds: 120,
         });
         this.interval = setInterval(() => {
 
@@ -132,11 +133,11 @@ export default class AppointMeasure extends Component {
     }
 
     onPressBack() {
-      if (Platform.OS == 'ios'){
-        NativeModules.QNUI.popViewController();
-      }else {
-        BackAndroid.exitApp();
-      }
+        if (Platform.OS == 'ios') {
+            NativeModules.QNUI.popViewController();
+        } else {
+            BackAndroid.exitApp();
+        }
     }
 
 
@@ -194,7 +195,9 @@ export default class AppointMeasure extends Component {
                            source={require('../imgs/icons/measure@3x.png')}/>
                 </View>
                 <View style={styles.bottomBar}>
-                    <QNButton color={this.props.themeColor} title={buttonStr} onPress={pressAction}/>
+                    <QNButton color={this.props.themeColor} title={buttonStr} onPress={pressAction}
+                              underlayColor={this.props.themeColor}
+                              activeOpacity={1}/>
                 </View>
 
             </View>

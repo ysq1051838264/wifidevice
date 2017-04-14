@@ -149,6 +149,7 @@ export default class UnMeasureData extends Component {
         var view;
         if (this.state.isSelectFlag) {
             view = (<TouchableOpacity style={{flex: 1}}
+                                      activeOpacity={0.5}
                                       onPress={() => this._pressRow(rowData, sectionID, rowID)}>
                 {dataRowView}
             </TouchableOpacity>)
@@ -375,7 +376,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-end',
         alignItems: 'center',
-        marginRight: 10,
+        marginRight: 15,
         height: 50,
         position: 'relative'
     },
