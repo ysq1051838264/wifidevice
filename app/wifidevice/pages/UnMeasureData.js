@@ -9,7 +9,6 @@ import * as Storage  from "../utils/Storage";
 import NavigationBar from "../component/NavigationBar";
 import commonStyles from '../styles/common';
 import QNButton from '../component/QNButton';
-import LoadingView from '../component/LoadingView';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import {
@@ -46,7 +45,6 @@ export default class UnMeasureData extends Component {
         });
 
         this.state = {
-            animateFlag: true,
             isSelectFlag: true,
             loadingFlag: true ,
             dataSource: ds,
@@ -298,11 +296,6 @@ export default class UnMeasureData extends Component {
 
     render() {
         const {dataSource} = this.state;
-        // if (this.state.animateFlag) {
-        //     return <LoadingView animateFlag={this.state.animateFlag} color={this.props.themeColor}/>;
-        // }
-
-        var loadingView = (<LoadingView animateFlag={this.state.animateFlag}/>);
 
         var view;
         if (this.state.isSelectFlag) {
