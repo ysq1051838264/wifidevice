@@ -48,7 +48,7 @@ export default class UnMeasureData extends Component {
         this.state = {
             animateFlag: true,
             isSelectFlag: true,
-            loadingFlag: false,
+            loadingFlag: true ,
             dataSource: ds,
         };
     }
@@ -59,7 +59,7 @@ export default class UnMeasureData extends Component {
                 console.log('未知测量数据请求成功', data);
                 this.setState({
                     dataSource: this.state.dataSource.cloneWithRows(data.slice(0)),
-                    animateFlag: false
+                    loadingFlag: false,
                 });
                 this.listData = data;
             })
@@ -245,7 +245,6 @@ export default class UnMeasureData extends Component {
             NativeModules.QNUI.onMessageDailog("您确定要删除么？")
                 .then(data => {
                     if (data.tipsFlag) {
-
                         this.setState({
                             loadingFlag: true,
                         });
@@ -299,9 +298,9 @@ export default class UnMeasureData extends Component {
 
     render() {
         const {dataSource} = this.state;
-        if (this.state.animateFlag) {
-            return <LoadingView animateFlag={this.state.animateFlag} color={this.props.themeColor}/>;
-        }
+        // if (this.state.animateFlag) {
+        //     return <LoadingView animateFlag={this.state.animateFlag} color={this.props.themeColor}/>;
+        // }
 
         var loadingView = (<LoadingView animateFlag={this.state.animateFlag}/>);
 

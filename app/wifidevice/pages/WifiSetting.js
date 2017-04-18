@@ -41,7 +41,7 @@ export default class WifiSetting extends Component {
 
         this.state = {
             ssid: '',
-            password: '12345678910',
+            password: '',
             workState: Constant.STATE_IDLE,
             device: {},
             themeColor: null

@@ -40,21 +40,21 @@ export default class MeasureActions {
             scale_name: scale_name,
             internal_model: internalModel,
             mac: mac,
-            bind_link:1,
+            bind_link: 1,
             scale_type: scale_type,
             device_type: device_type,
         }), Api.timeout()]);
     }
 
     static fetchUnknownMeasure(userid, lastSynTime, previousDataTime) {
-        return Api.doGet(path_unknown_measurements, {
+        return Promise.race([Api.doGet(path_unknown_measurements, {
             user_id: userid,
             previous_created_at: previousDataTime,
             last_at: lastSynTime
         }).then(data => {
             var invalidData = data.invalid_data
             return new Promise.resolve(invalidData)
-        });
+        }), Api.timeout()]);
     }
 
     static deleteInvalidData(dataIds) {
