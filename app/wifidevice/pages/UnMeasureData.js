@@ -240,7 +240,17 @@ export default class UnMeasureData extends Component {
 
         if (deleteFlag) {
             console.log("删除最后的值", string);
-            NativeModules.QNUI.onMessageDailog("您确定要删除么？")
+            if (Platform.OS == 'ios'){
+              AlertIOS.alert(
+                '',
+                '您确定要删除么？',
+                [
+                  {text: '取消',onPress: () => console.log("点击取消")},
+                  {text: '确定', onPress: () => {this.deleteUnKnow(string)}},
+                ]
+              )
+            }else{
+              NativeModules.QNUI.onMessageDailog("您确定要删除么？")
                 .then(data => {
                     if (data.tipsFlag) {
                         this.setState({
@@ -258,8 +268,8 @@ export default class UnMeasureData extends Component {
                     }
                 }).catch(e => {
                 console.log(e.message)
-            });
-
+              });
+            }
         } else {
             console.log("配对最后的值", string);
             this.setState({
@@ -274,6 +284,24 @@ export default class UnMeasureData extends Component {
                 });
         }
 
+    }
+    cancelDeleteUnKnow(){
+    console.log('取消')
+    }
+
+    deleteUnKnow(dataId){
+        console.log('开始删除请求');
+      this.setState({
+        loadingFlag: true,
+      });
+
+      MeasureHttp.deleteInvalidData(dataId)
+        .then(flag => {
+          this.updateData();
+        })
+        .catch(e => {
+          console.log("请求失败", e)
+        });
     }
 
     updateData() {

@@ -51,7 +51,7 @@ export default class ReportActivity extends Component {
     loadData() {
         if (Platform.OS === 'ios') {
             NativeModules.QNReport.fetchReportDataWithDataId(this.props.dataId + "").then(e => {
-                // console.log('ysq打印出来的：list的值是', e);
+                console.log('ysq打印出来的：list的值是', e);
                 this.setState(e);
             }).catch(error => {
                 console.log(error);
@@ -76,7 +76,7 @@ export default class ReportActivity extends Component {
         console.log("布局完成:", e.nativeEvent.layout);
         const {width, height} =  e.nativeEvent.layout;
 
-        if (height > 350) {
+        if (height > 200) {
             NativeModules.QNUI.onGetViewSize(width, height)
         }
     }

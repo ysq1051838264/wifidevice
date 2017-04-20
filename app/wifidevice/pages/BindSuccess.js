@@ -14,7 +14,8 @@ import  {
     ToastAndroid,
     NetInfo,
     PixelRatio,
-    Platform
+    Platform,
+    AlertIOS
 } from 'react-native';
 
 
@@ -73,7 +74,12 @@ export default class BindSuccess extends Component {
         if (Platform.OS == 'ios') {
             NativeModules.SmartLinker.anysMesasure(this.state.mac)
                 .then(data => {
-                    NativeModules.QNUI.popViewController();
+                    console.log("=======",data);
+                  if (data.isHaveMeasureFlag) {
+                    NativeModules.QNUI.popTwoViewController();
+                  } else {
+                    AlertIOS.alert("暂时没有测量数据，请上称在测量一次")
+                  }
                 })
                 .catch(e => {
                     console.log(e.message)

@@ -110,15 +110,11 @@ export default class AppointMeasure extends Component {
     }
 
     endMeasure() {
-        this.interval && clearInterval(this.interval);
-        this.setState({
-            status: Constant.STATUS_NONE,
-            seconds: 120,
-        });
+        Platform.OS == 'android' ? NativeModules.AppointMeasure.goBackToMainPage() : NativeModules.QNUI.popViewController();
     }
 
     // 倒计时
-    time() {
+    time(){
         this.setState({
             seconds: 120,
         });
@@ -127,7 +123,11 @@ export default class AppointMeasure extends Component {
             if (this.state.seconds > 0) {
                 this.setState({seconds: (this.state.seconds - 1)});
             } else if (this.state.seconds == 0) {
-                this.endMeasure();
+                this.interval && clearInterval(this.interval);
+                this.setState({
+                    status: Constant.STATUS_NONE,
+                    seconds: 120,
+                });
             }
         }, 1000);
     }
@@ -174,9 +174,9 @@ export default class AppointMeasure extends Component {
             default:
                 break;
         }
-        console.log('重新走',buttonStr);
+        console.log('重新走', buttonStr);
         return (
-            <View style={[commonStyles.main, commonStyles.wrapper]}>
+            <View style={[commonStyles.main, commonStyles.wrapper, {backgroundColor: 'white'}]}>
                 <NavigationBar
                     title="测量"
                     leftAction={this.onPressBack.bind(this)}/>
@@ -191,7 +191,7 @@ export default class AppointMeasure extends Component {
 
                     </Text>
 
-                    <Image style={styles.scaleImage}
+                    <Image style={{marginTop: 25}}
                            source={require('../imgs/icons/measure@3x.png')}/>
                 </View>
                 <View style={styles.bottomBar}>
@@ -223,10 +223,6 @@ const styles = StyleSheet.create({
     topText: {
         fontSize: 20,
         marginTop: 100,
-    },
-
-    scaleImage: {
-        marginTop: 25,
     },
 
     bottomBar: {

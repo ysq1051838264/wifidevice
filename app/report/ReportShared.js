@@ -146,7 +146,16 @@ var ReportShared = React.createClass({
     },
 
     //cell
-    renderCell(data){
+    renderCell(data,sectionId,rowId){
+        var topDis = 0;
+        var secHeight = 49;
+        if (rowId == 0){
+          topDis = -1;
+          secHeight = 50;
+        }else{
+          topDis = 0;
+          secHeight = 49;
+        }
         return (
             <View style={styles.cellViewStyle}>
                 {/*图标*/}
@@ -154,8 +163,8 @@ var ReportShared = React.createClass({
                     <View style={{width: 42,backgroundColor:'white', height: 50, flexDirection: 'row', alignItems: 'center'}}>
                         <Image source={this.getScaleIcon(data.title)} style={styles.scaleIconStyle}/>
                     </View>
-                    <View style={{height: 49, backgroundColor: 'white', width: ScreenWidth - 42}}>
-                        <View style={{flexDirection: 'row', alignItems: 'center',height: 49}} >
+                    <View style={{height: secHeight, backgroundColor: 'white', width: ScreenWidth - 42, marginTop: topDis}}>
+                        <View style={{flexDirection: 'row', alignItems: 'center',height: secHeight}} >
                           {/*指标名称*/}
                             <Text style={[styles.scaleTitleStyle, {flex: 4}]}>{data.title}</Text>
                           {/*指标数值*/}
@@ -186,7 +195,7 @@ var ReportShared = React.createClass({
     //高度
     onLayout(e){
         const {width, height} =  e.nativeEvent.layout;
-        if (height > 350) {
+        if (height > 200) {
             if (Platform.OS === 'ios') {
                 NativeModules.QNUI.onGetAnalysisReport(width, height)
             } else {
