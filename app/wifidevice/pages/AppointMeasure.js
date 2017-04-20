@@ -110,7 +110,11 @@ export default class AppointMeasure extends Component {
     }
 
     endMeasure() {
-        Platform.OS == 'android' ? NativeModules.AppointMeasure.goBackToMainPage() : "ios";
+        this.interval && clearInterval(this.interval);
+        this.setState({
+            status: Constant.STATUS_NONE,
+            seconds: 120,
+        });
     }
 
     // 倒计时
@@ -123,11 +127,7 @@ export default class AppointMeasure extends Component {
             if (this.state.seconds > 0) {
                 this.setState({seconds: (this.state.seconds - 1)});
             } else if (this.state.seconds == 0) {
-                this.interval && clearInterval(this.interval);
-                this.setState({
-                    status: Constant.STATUS_NONE,
-                    seconds: 120,
-                });
+                this.endMeasure();
             }
         }, 1000);
     }
@@ -174,9 +174,9 @@ export default class AppointMeasure extends Component {
             default:
                 break;
         }
-        console.log('重新走', buttonStr);
+        console.log('重新走',buttonStr);
         return (
-            <View style={[commonStyles.main, commonStyles.wrapper, {backgroundColor: 'white'}]}>
+            <View style={[commonStyles.main, commonStyles.wrapper]}>
                 <NavigationBar
                     title="测量"
                     leftAction={this.onPressBack.bind(this)}/>
