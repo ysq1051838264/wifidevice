@@ -262,9 +262,6 @@ export default class UnMeasureData extends Component {
 
         } else {
             console.log("配对最后的值", string);
-            this.setState({
-                loadingFlag: true,
-            });
             MeasureHttp.assignInvalidData(this.props.userid, string)
                 .then(data => {
                     this.updateData();
