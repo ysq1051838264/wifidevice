@@ -19,7 +19,7 @@ var session_key = "";
 var Api = {
     config: {
         api: 'api.sit.yolanda.hk',
-      // api: '192.168.1.37:3002',
+        // api: '192.168.1.37:3002',
         // app 版本号
         version: 1.1,
 
@@ -36,6 +36,7 @@ var Api = {
         public_params.platform = data.platform;
         public_params.system_type = data.system_type;
         public_params.cellphone_type = data.cellphone_type;
+        this.config.api = data.api
     },
 
     serialize: function (obj) {

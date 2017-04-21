@@ -75,6 +75,7 @@ export default class AppointMeasure extends Component {
     componentDidMount() {
         console.log(this.props.sessionKey)
         Api.saveSessionKey(this.props.sessionKey);
+        Api.savePublicParams(this.props);
         Storage.saveSessionKey(this.props.sessionKey);
         Storage.saveThemeColor(this.props.themeColor);
 
