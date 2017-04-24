@@ -46,6 +46,7 @@ export default class AppointMeasure extends Component {
             userId: 0,
             mac: '',
             status: Constant.STATUS_NONE,
+            master: true,
         };
     }
 
@@ -55,6 +56,7 @@ export default class AppointMeasure extends Component {
         }
         this.setState({
             themeColor: this.props.themeColor,
+            master:this.props.master,
         });
     }
 
@@ -111,11 +113,13 @@ export default class AppointMeasure extends Component {
     }
 
     endMeasure() {
-        Platform.OS == 'android' ? NativeModules.AppointMeasure.goBackToMainPage() : NativeModules.QNUI.popViewController();
+        console.log("退出", this.state.master);
+        Platform.OS == 'android' ? this.state.master ? NativeModules.AppointMeasure.goBackToMainPage() : BackAndroid.exitApp()
+            : NativeModules.QNUI.popViewController();
     }
 
     // 倒计时
-    time(){
+    time() {
         this.setState({
             seconds: 120,
         });

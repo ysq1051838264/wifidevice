@@ -66,7 +66,7 @@ export default class DeepinReportShared extends Component {
     /*加载数据*/
     _loadData() {
         if (Platform.OS === 'ios') {
-            NativeModules.QNAnalysisDeepinReportModule.fetchDeepinReportDataWithDataId(this.props.dataId + "").then(e => {
+            NativeModules.QNAnalysisDeepinReportModule.fetchDeepinReportDataWithDataDic(this.props.dataDic ).then(e => {
                 console.log('打印出来的：', e);
                 this.setState(e);
             }).catch(error => {
@@ -74,7 +74,7 @@ export default class DeepinReportShared extends Component {
             });
         } else {
             NativeModules.QNReport.fetchReportDataWithDataId(this.props.reportType + "", this.props.dataId + "").then(e => {
-                // console.log('ysq打印出来的：list的值是', e);
+                console.log('ysq打印出来的：list的值是', e);
                 this.setState(e);
             }).catch(error => {
                 console.log(error);
@@ -171,20 +171,23 @@ export default class DeepinReportShared extends Component {
 
 
         var showStr;
+        var unitStr;
         if (text == "无需控制") {
 
-            showStr = ""
-
+            showStr = "";
+            unitStr ="";
         } else {
 
             if (text > 0) {
 
                 showStr = "增加";
+
             } else if (text < 0){
 
                 showStr = "减少";
                 text = text.substr(1, text.length);
             }
+            unitStr =this.state.weightUnit;
         }
         var icon;
         var title;
@@ -226,7 +229,7 @@ export default class DeepinReportShared extends Component {
                 }}>
                     <Text style={styles.weightControlSubview_showStr}>{showStr}</Text>
                     <Text style={styles.weightControlSubview_text}>{text}</Text>
-                    <Text style={styles.weightControlSubview_showStr}>{this.state.weightUnit}</Text>
+                    <Text style={styles.weightControlSubview_showStr}>{unitStr}</Text>
                 </View>
             </View>
         )
@@ -269,7 +272,7 @@ export default class DeepinReportShared extends Component {
                                 style={[styles.muscleInfoView_textUnit, {fontSize: 11}]}>{this.state.weightUnit}</Text>
                         </View>
                         <View style={styles.muscleInfoView_textView}>
-                            <Text style={styles.muscleInfoView_title}>肌肉量：</Text>
+                            <Text style={styles.muscleInfoView_title}>骨骼肌率：</Text>
                             <Text style={styles.muscleInfoView_text}>{this.state.muscle}</Text>
                             <Text style={styles.muscleInfoView_textUnit}>%</Text>
                         </View>
@@ -523,9 +526,16 @@ export default class DeepinReportShared extends Component {
 
         if (index == 0) {
             return (
-                <View style={{flexDirection: "row", alignItems: 'center'}}>
-                    <Text style={styles.BMIAndBodyfatInfoView_title}>腰臀围类型：</Text>
-                    <Text style={{color: this.props.themeColor}}>请在个人信息界面输入腰臀围</Text>
+                <View style={{flexDirection: "row", alignItems: 'center', top: 20}}>
+                    <Text style={{
+                        fontSize: 12,
+                        width: 85,
+                        textAlign: 'center', color: "#999999", top: 22,
+                    }}>腰臀围类型：</Text>
+                    <Text style={{
+                        fontSize: 12,
+                        textAlign: 'center', color: this.props.themeColor, top: 22,
+                    }}>请在个人信息界面输入腰臀围</Text>
                 </View>
             )
         } else {
@@ -1036,14 +1046,14 @@ const styles = StyleSheet.create({
     },
     weightControlView_base: {//第二部分体重控制
         width: screenWidth - 20,
-        height: 73,
+        height: 68,
         backgroundColor: "white",
         flexDirection: "row",
         alignItems: 'center',
     },
     weightControlSubview: {
         width: (screenWidth - 20) / 2,
-        height: 73,
+        height: 68,
         backgroundColor: 'white',
         alignItems: 'center',
         flexDirection: 'column',
