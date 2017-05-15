@@ -17,7 +17,7 @@ import  {
     PixelRatio,
     TouchableOpacity,
     NativeModules,
-    ScrollView
+    ScrollView,
 } from 'react-native';
 
 import commonStyles from '../styles/common';
@@ -80,6 +80,15 @@ export default class WifiConfigSecond extends Component {
         }
     }
 
+    jumpBleDevice() {
+        if (Platform.OS == 'ios') {
+
+        } else {
+            NativeModules.QNUI.toBleDeviceView();
+        }
+
+    }
+
     _next() {
         const {navigator} = this.props;
         navigator.push({
@@ -94,24 +103,42 @@ export default class WifiConfigSecond extends Component {
     render() {
         var themeColor = this.state.themeColor;
 
-        let modal = (<NetInfoModal show={this.state.show} navigator={this.props.navigator}   themeColor ={this.props.themeColor} />);
+        let modal = (
+            <NetInfoModal show={this.state.show} navigator={this.props.navigator} themeColor={this.props.themeColor}/>);
         let view = this.state.show ? modal : null;
 
         let imgWidth = screenWidth < 360 ? screenWidth : 360
 
         return (
-            <View style={[commonStyles.main, commonStyles.wrapper,{  backgroundColor: 'white',}]}>
+            <View style={[commonStyles.main, commonStyles.wrapper, {backgroundColor: 'white',}]}>
                 <NavigationBar leftAction={this.backOnPress.bind(this)} title="连接"/>
                 <ScrollView style={styles.contentContainer}
                             showsVerticalScrollIndicator={false}>
                     <View style={{alignItems: 'center'}}>
-                        <Image source={require('../imgs/icons/wifi_config_guide_bg.png')}
-                               style={{resizeMode: Image.resizeMode.contain, width: imgWidth}}>
-                            <Image source={require('../imgs/icons/wifi_config_guide_fg.png')}
+                        <Text style={styles.topText}> 1. 打开电池后盖, 长按黑色按钮3秒。</Text>
+                        <TouchableOpacity  activeOpacity={1} onPress={this.jumpBleDevice.bind(this)}>
+                            <View style={{flexDirection: 'row'}}>
+                                <Text style={styles.tipText}> 找不到黑色按钮？试试</Text>
+                                <Text style={[styles.tipText, {color: themeColor}]}> 蓝牙设备</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <Image source={require('../imgs/icons/wifi_config_guide_open_bg@3x.png')}
+                               style={{resizeMode: Image.resizeMode.contain, marginTop: 5}}>
+                            <Image source={require('../imgs/icons/wifi_config_guide_open_fg@3x.png')}
                                    style={{
                                        tintColor: themeColor,
                                        resizeMode: Image.resizeMode.contain,
-                                       width: imgWidth
+                                   }}/>
+                        </Image>
+
+                        <Text style={styles.topText}>2. WiFi标志闪动,表示进入到了配网模式</Text>
+
+                        <Image source={require('../imgs/icons/wifi_config_guide_flash_bg@3x.png')}
+                               style={{resizeMode: Image.resizeMode.contain}}>
+                            <Image source={require('../imgs/icons/wifi_config_guide_flash_fg@3x.png')}
+                                   style={{
+                                       tintColor: themeColor,
+                                       resizeMode: Image.resizeMode.contain,
                                    }}/>
                         </Image>
                     </View>
@@ -125,7 +152,8 @@ export default class WifiConfigSecond extends Component {
                     {view}
                 </View>
             </View>
-        );
+        )
+            ;
 
     }
 
@@ -154,6 +182,20 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'white',
     },
+
+    tipText: {
+        color: '#999',
+        fontSize: 15,
+        marginTop: 5,
+    },
+
+    topText: {
+        color: 'black',
+        fontSize: 17,
+        marginTop: 10,
+    },
+
+
     contentContainer: {
         flex: 1,
     },
@@ -175,9 +217,6 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
 
-    topText: {
-        fontSize: 20,
-    },
     bottomBar: {
         height: 60,
         justifyContent: 'center',
