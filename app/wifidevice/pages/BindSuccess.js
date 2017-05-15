@@ -53,7 +53,7 @@ export default class BindSuccess extends Component {
 
     goHome() {
         if (Platform.OS == 'ios') {
-            NativeModules.SmartLinker.anysMesasure(mac)
+            NativeModules.SmartLinker.anysMesasure(this.props.mac)
                 .then(data => {
                     NativeModules.QNUI.popViewController();
                 })
