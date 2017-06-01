@@ -82,7 +82,7 @@ export default class WifiConfigSecond extends Component {
 
     jumpBleDevice() {
         if (Platform.OS == 'ios') {
-
+            NativeModules.QNUI.pushBleDevice();
         } else {
             NativeModules.QNUI.toBleDeviceView();
         }

@@ -318,7 +318,7 @@ var ReportShared = React.createClass({
             case "BMI":
                 icon = require('../imgs/scaleIcon/bmi_icon.png')
                 break
-            case "脂肪率":
+            case "体脂率":
                 icon = require('../imgs/scaleIcon/bodyfat_icon.png')
                 break
             case "去脂体重":

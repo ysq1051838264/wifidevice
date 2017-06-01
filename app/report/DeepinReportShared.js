@@ -514,9 +514,8 @@ export default class DeepinReportShared extends Component {
             }}>
                 <Image source={(bodyIcon)} style={{width: 27, height: 27}}/>
                 <Text style={{
-                    textAlign: 'center',
                     fontSize: 12,
-                    color: color, left: 5
+                    color: color, left: 5, width: 60,
                 }}>{title}</Text>
             </View>
         )
@@ -743,9 +742,10 @@ export default class DeepinReportShared extends Component {
             scoreIcon = require("../imgs/deepinReport_health_assessment_level_0.png");
         }
         const scoreString = score + "分";
-        const bigScore = scoreString.substr(0, scoreString.length - 4) + " " + scoreString.substr(scoreString.length - 4, 1) + " ";
-        const smallScore = scoreString.substr(scoreString.length - 3, 2) + " " + scoreString.substr(scoreString.length - 1, 1);
-        // console.log(bigScore);
+        const  integerStr =String( Math.floor(score));
+        const bigScore = integerStr + " " + scoreString.substr(integerStr.length, 1) + " ";
+        const smallScore = scoreString.substr(integerStr.length + 1, scoreString.length - integerStr.length - 2) + " " + scoreString.substr(scoreString.length - 1, 1);
+        console.log(bigScore,integerStr.length);
         return (
             <View style={{flexDirection: 'row', alignItems: 'center', height: 125, left: 35}}>
                 <Text style={{
@@ -768,22 +768,19 @@ export default class DeepinReportShared extends Component {
     /*尾部显示*/
     renderFooterView(){
 
-
         if (this.props.shieldUserInfo == 1){
             return (
                 <View style={{height:20}}/>
             )
         }else  {
-            {this.renderFooter()}
+            console.log('yyyyyyyy')
+            return (
+                <ReportCorderView
+                    isShareFlag={this.state.isShareFlag}
+                    themeColor={this.props.themeColor}
+                />
+            )
         }
-    }
-    renderFooter() {
-        return (
-            <ReportCorderView
-                isShareFlag={this.state.isShareFlag}
-                themeColor={this.props.themeColor}
-            />
-        )
     }
 
     /*绘制view*/
@@ -798,7 +795,7 @@ export default class DeepinReportShared extends Component {
                     <View style={styles.weightInfoView}>
                         {this.renderWeightInfoSubview("体重", this.state.weight)}
                         <View style={{width: 1, height: 30, backgroundColor: "#F4F4F4"}}></View>
-                        {this.renderWeightInfoSubview("脂肪率", this.state.bodyfat)}
+                        {this.renderWeightInfoSubview("体脂率", this.state.bodyfat)}
                         <View style={{width: 1, height: 30, backgroundColor: "#F4F4F4"}}></View>
                         {this.renderWeightInfoSubview("骨骼肌率", this.state.muscle)}
                     </View>
