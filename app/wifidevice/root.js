@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Navigator} from 'react-native';
 import * as Storage from './utils/Storage';
 import UserInfo from './utils/UserInfo';
-import WifiConfigSecond from './pages/WifiConfigSecond';
+import WifiSetting from './pages/WifiSetting';
 import WifiConfigFirst from './pages/WifiConfigFirst';
 import Api from './http/api';
 
@@ -34,7 +34,7 @@ export default class root extends Component {
             view = (<Navigator
                 ref={view => this.navigator = view}
                 initialRoute={{
-                    component: WifiConfigSecond,
+                    component: WifiSetting,
                     name: 'wifi_config_second',
                     params: {
                         themeColor: this.props.themeColor,

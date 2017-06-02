@@ -23,7 +23,7 @@ import commonStyles from '../styles/common';
 import Icon from 'react-native-vector-icons/Ionicons';
 import QNButton from '../component/QNButton';
 import NavigationBar from '../component/NavigationBar';
-import WifiConfigSecond from './WifiConfigSecond';
+import WifiSetting from './WifiSetting';
 
 export default class WifiConfigFirst extends Component {
   constructor(props) {
@@ -90,7 +90,7 @@ export default class WifiConfigFirst extends Component {
     console.log('设置wifi界面');
     const {navigator} = this.props;
     navigator.resetTo({
-      component: WifiConfigSecond,
+      component: WifiSetting,
       name: 'wifi_config_second',
       params: {
         themeColor: this.state.themeColor,

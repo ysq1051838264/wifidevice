@@ -24,6 +24,7 @@ import commonStyles from '../styles/common';
 import QNButton from '../component/QNButton';
 import NavigationBar from '../component/NavigationBar';
 import WifiConfig from './WifiSetting';
+import WiFiPairView from './WiFiPairView';
 import NetInfoModal from '../component/NetInfoModal';
 var Dimensions = require('Dimensions');
 var screenWidth = Dimensions.get('window').width;
@@ -35,6 +36,8 @@ export default class WifiConfigSecond extends Component {
         this.state = {
             themeColor: null,
             show: false,
+            wifiName: '',
+            wifiPassword: ''
         }
     }
 
@@ -47,6 +50,8 @@ export default class WifiConfigSecond extends Component {
 
         this.setState({
             themeColor: this.props.themeColor,
+            wifiName: this.props.wifiName,
+            wifiPassword: this.props.wifiPassword,
         });
     }
 
@@ -92,10 +97,12 @@ export default class WifiConfigSecond extends Component {
     _next() {
         const {navigator} = this.props;
         navigator.push({
-            component: WifiConfig,
-            name: 'wifi_config',
+            component: WiFiPairView,
+            name: 'wifi_pair_view',
             params: {
                 themeColor: this.state.themeColor,
+                wifiName: this.state.wifiName,
+                wifiPassword: this.state.wifiPassword,
             }
         });
     }
@@ -116,7 +123,7 @@ export default class WifiConfigSecond extends Component {
                             showsVerticalScrollIndicator={false}>
                     <View style={{alignItems: 'center'}}>
                         <Text style={styles.topText}> 1. 打开电池后盖, 长按黑色按钮3秒。</Text>
-                        <TouchableOpacity  activeOpacity={1} onPress={this.jumpBleDevice.bind(this)}>
+                        <TouchableOpacity activeOpacity={1} onPress={this.jumpBleDevice.bind(this)}>
                             <View style={{flexDirection: 'row'}}>
                                 <Text style={styles.tipText}> 找不到黑色按钮？试试</Text>
                                 <Text style={[styles.tipText, {color: themeColor}]}> 蓝牙设备</Text>

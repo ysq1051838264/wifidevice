@@ -29,6 +29,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import QNButton from '../component/QNButton';
 import NavigationBar from '../component/NavigationBar';
 import BindSuccess from './BindSuccess';
+import WifiConfigSecond from './WifiConfigSecond';
 import Spinner from 'react-native-spinkit';
 import * as Constant from '../constant/constant';
 import MeasureHttpClient from "../http/MeasureHttpClient";
@@ -84,7 +85,8 @@ export default class WifiSetting extends Component {
             name: 'bind_success',
             params: {
                 themeColor: this.state.themeColor,
-                mac: this.state.device.mac
+                mac: this.state.device.mac,
+                themeColor: this.state.device.themeColor
             }
         });
     }
@@ -117,52 +119,18 @@ export default class WifiSetting extends Component {
 
     startConfig() {
         //执行配网操作，调用本地化代码
-        const {ssid, password} = this.state;
+        const {ssid, password, themeColor} = this.state;
 
-        console.log("开启配网的wifi和密码" + ssid + "   " + password)
-
-        this.setState({
-            device: {},
-            workState: Constant.STATE_SETTING_WIFI,
+        const {navigator} = this.props;
+        navigator.push({
+            component: WifiConfigSecond,
+            name: 'Wifi_ConfigSecond',
+            params: {
+                themeColor: themeColor,
+                wifiName: ssid,
+                wifiPassword: password
+            }
         });
-
-        SmartLinker.startSetWifi(ssid, password)
-            .then(device => {
-                //拿到了 mac
-                var mac = device.mac;
-                mac = mac.substr(0, 2) + ':' + mac.substr(2, 2) + ':' + mac.substr(4, 2) + ':' + mac.substr(6, 2) + ':' + mac.substr(8, 2) + ':' + mac.substr(10, 2);
-                device.mac = mac;
-                console.log("拿到了 mac", mac);
-                if (this.isDestrory) {
-                    throw "Component is destroy"
-                }
-                return MeasureHttpClient.fetchScaleNameAndInternalModel(device);
-            })
-            .then((device) => {
-                //已经拿到了 mac地址，设备名称，内部型号,以及所有设备信息
-                console.log("打印device", device);
-                if (this.isDestrory) {
-                    throw "Component is destroy"
-                }
-
-                this.setState({
-                    device: device,
-                    // workState: Constant.STATE_GOT_MODEL
-                })
-
-                this.bindDevice();
-            })
-            .catch(e => {
-                console.log('配网失败', e)
-                if (this.isDestrory) {
-                    return
-                }
-                this.stopConfig();
-                this.setState({
-                    device: {},
-                    workState: Constant.STATE_FAIL,
-                });
-            })
     }
 
     stopConfig() {
@@ -192,8 +160,17 @@ export default class WifiSetting extends Component {
 
     backOnPress() {
         const {navigator} = this.props;
-        if (navigator) {
+        const routers = navigator.getCurrentRoutes();
+        if (routers.length > 1) {
             navigator.pop();
+        } else {
+            if (navigator) {
+                if (Platform.OS == 'ios') {
+                    NativeModules.QNUI.popViewController();
+                } else {
+                    BackAndroid.exitApp();
+                }
+            }
         }
     }
 
@@ -360,7 +337,7 @@ const styles = StyleSheet.create({
     },
     tipText: {
         color: '#999',
-        fontSize: 17,
+        fontSize: 16,
         marginTop: 10,
     },
     bottomBar: {
