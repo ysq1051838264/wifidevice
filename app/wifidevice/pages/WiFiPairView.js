@@ -32,7 +32,6 @@ import MeasureHttpClient from "../http/MeasureHttpClient";
 var {SmartLinker, QNDeviceInfo} = NativeModules;
 
 export default class WiFiPairView extends Component {
-
     constructor(props) {
         super(props);
 
@@ -43,19 +42,21 @@ export default class WiFiPairView extends Component {
             workState: Constant.STATE_SETTING_WIFI,
             device: {},
             themeColor: null
-        }
+        };
 
         this.isDestrory = false
     }
 
     componentWillMount() {
-        NetInfo.isConnected.addEventListener('change', this.connectivityChange.bind(this));
-
         this.setState({
             themeColor: this.props.themeColor,
             wifiName: this.props.wifiName,
             wifiPassword: this.props.wifiPassword,
         });
+    }
+
+    componentDidMount() {
+        NetInfo.isConnected.addEventListener('change', this.connectivityChange.bind(this));
     }
 
     componentWillUnmount() {
@@ -80,11 +81,11 @@ export default class WiFiPairView extends Component {
 
     startConfig() {
         const {wifiName, wifiPassword} = this.state;
-
+        console.log('配网wifi:', wifiName + "----" + wifiPassword);
         SmartLinker.startSetWifi(wifiName, wifiPassword)
             .then(device => {
                 //拿到了 mac
-                var mac = device.mac;
+                let mac = device.mac;
                 mac = mac.substr(0, 2) + ':' + mac.substr(2, 2) + ':' + mac.substr(4, 2) + ':' + mac.substr(6, 2) + ':' + mac.substr(8, 2) + ':' + mac.substr(10, 2);
                 device.mac = mac;
                 console.log("拿到了 mac", mac);
@@ -100,22 +101,18 @@ export default class WiFiPairView extends Component {
                     throw "Component is destroy"
                 }
 
-                this.setState({
-                    device: device,
-                    // workState: Constant.STATE_GOT_MODEL
-                })
-
-                this.bindDevice();
+                this.bindDevice(device);
             })
             .catch(e => {
-                console.log('配网失败', e)
+                console.log('配网失败', e);
                 if (this.isDestrory) {
                     return
                 }
-                this.setState({
-                    device: {},
-                    workState: Constant.STATE_FAIL,
-                });
+                this.stopConfig();
+                // this.setState({
+                //     device: {},
+                //     workState: Constant.STATE_FAIL,
+                // });
             })
     }
 
@@ -128,7 +125,6 @@ export default class WiFiPairView extends Component {
     }
 
     render() {
-
         var contentView;
 
         switch (this.state.workState) {
@@ -140,8 +136,8 @@ export default class WiFiPairView extends Component {
                             dialogLeftBtnAction={() => {
                                 this.dialogCancel()
                             }}
-                            dialogRightBtnAction={() => {
-                                this.dialogConfirm()
+                            dialogRightBtnAction={(wifiPwd) => {
+                                this.dialogConfirm(wifiPwd)
                             }}
                         />
                     </View>);
@@ -154,12 +150,15 @@ export default class WiFiPairView extends Component {
                     <View style={styles.container}>
                         <View style={styles.contentContainer}>
                             <ModalDialog
+                                dialogTitle={`当前网络: ${this.state.wifiName}`}
+                                dialogThemeColor={this.state.themeColor}
+                                dialogContent={this.state.wifiPassword}
                                 dialogVisible={this.state.isDialogVisible}
                                 dialogLeftBtnAction={() => {
                                     this.dialogCancel()
                                 }}
-                                dialogRightBtnAction={() => {
-                                    this.dialogConfirm()
+                                dialogRightBtnAction={(wifiPwd) => {
+                                    this.dialogConfirm(wifiPwd)
                                 }}
                             />
 
@@ -170,7 +169,8 @@ export default class WiFiPairView extends Component {
                                 <Text style={[styles.btnText, {color: this.state.themeColor}]}>重新输入Wi-Fi密码</Text>
                             </TouchableHighlight>
                             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                <Spinner size={100} type="Bounce" color={this.state.themeColor}/>
+                                <Spinner size={100} type="Bounce" color={this.state.themeColor}
+                                         isVisible={!this.state.isDialogVisible}/>
                             </View>
                         </View>
                     </View>
@@ -180,17 +180,19 @@ export default class WiFiPairView extends Component {
 
             case Constant.STATE_FAIL: {
                 this.stopConfig();
-                console.log('配网失败');
                 contentView = (
                     <View style={styles.container}>
                         <View style={[styles.contentContainer, {marginTop: 10}]}>
                             <ModalDialog
+                                dialogTitle={`当前网络: ${this.state.wifiName}`}
+                                dialogThemeColor={this.state.themeColor}
+                                dialogContent={this.state.wifiPassword}
                                 dialogVisible={this.state.isDialogVisible}
                                 dialogLeftBtnAction={() => {
                                     this.dialogCancel()
                                 }}
-                                dialogRightBtnAction={() => {
-                                    this.dialogConfirm()
+                                dialogRightBtnAction={(wifiPwd) => {
+                                    this.dialogConfirm(wifiPwd)
                                 }}
                             />
                             <View style={{justifyContent: 'center', alignItems: 'center',}}>
@@ -232,13 +234,19 @@ export default class WiFiPairView extends Component {
     }
 
     dialogCancel() {
-        this.setState({isDialogVisible: true});
+        this.setState({
+            isDialogVisible: false,
+        });
     }
 
-    dialogConfirm() {
-        this.setState({isDialogVisible: false});
+    dialogConfirm(wifiPwd) {
+        this.setState({
+            isDialogVisible: false,
+            wifiPassword: wifiPwd,
+            workState: Constant.STATE_SETTING_WIFI,
+        });
+        console.log("ysq", wifiPwd)
     }
-
 
     backOnPress() {
         const {navigator} = this.props;
@@ -256,12 +264,12 @@ export default class WiFiPairView extends Component {
         }
     }
 
-    bindDevice() {
-        const {scale_name, internal_model, mac, scale_type, device_type} = this.state.device;
+    bindDevice(data) {
+        const {scale_name, internal_model, mac, scale_type, device_type} = data;
 
         MeasureHttpClient.bindDevice(scale_name, internal_model, mac, scale_type, device_type)
             .then((device) => {
-                this.toBindSuccess();
+                this.toBindSuccess(data);
             })
             .catch(e => {
                 console.log(e);
@@ -288,18 +296,23 @@ export default class WiFiPairView extends Component {
         }
     }
 
-    toBindSuccess() {
+    toBindSuccess(device) {
         Platform.OS === 'android' ? ToastAndroid.show("绑定成功，请上秤", ToastAndroid.SHORT) : AlertIOS.alert("绑定成功，请上秤");
+        if (Platform.OS === 'android') {
+            NativeModules.AynsMeasureModule.toMeasureView();
+        } else {
+            NativeModules.QNUI.popTwoViewController();
+        }
 
-        const {navigator} = this.props;
-        navigator.push({
-            component: BindSuccess,
-            name: 'bind_success',
-            params: {
-                themeColor: this.state.themeColor,
-                mac: this.state.device.mac,
-            }
-        });
+        // const {navigator} = this.props;
+        // navigator.push({
+        //     component: BindSuccess,
+        //     name: 'bind_success',
+        //     params: {
+        //         themeColor: this.state.themeColor,
+        //         mac: this.state.device.mac,
+        //     }
+        // });
     }
 
 }

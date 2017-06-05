@@ -20,10 +20,14 @@ let SCREEN_HEIGHT = Dimensions.get('window').height;//高
 export default  class ModalDialog extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            wifiPassword: this.props.dialogContent,
+        }
     }
 
     static propTypes = {
         dialogTitle: React.PropTypes.string,
+        dialogThemeColor: React.PropTypes.string,
         dialogContent: React.PropTypes.string, //内容
         dialogLeftBtnTitle: React.PropTypes.string,    //左按键标题
         dialogRightBtnTitle: React.PropTypes.string,   //右按键标题
@@ -38,8 +42,8 @@ export default  class ModalDialog extends Component {
         dialogLeftBtnTitle: '取消',
         dialogRightBtnTitle: '确定',
         dialogVisible: false,
+        dialogThemeColor: 'blue',
     };
-
 
     render() {
         return (
@@ -55,10 +59,14 @@ export default  class ModalDialog extends Component {
                                 {this.props.dialogTitle}
                             </Text>
                         </View>
+
                         <View style={styles.dialogContentView}>
-                            <Text style={styles.dialogContent}>
-                                {this.props.dialogContent}
-                            </Text>
+                            <TextInput placeholder="请输入wifi密码" style={styles.dialogContent}
+                                       underlineColorAndroid='transparent'
+                                       defaultValue={this.props.dialogContent}
+                                       onChangeText={(text) => {
+                                           this.setState({wifiPassword: text})
+                                       }}/>
                         </View>
 
                         <View style={styles.dialogBtnView}>
@@ -68,8 +76,11 @@ export default  class ModalDialog extends Component {
                                     {this.props.dialogLeftBtnTitle}
                                 </Text>
                             </TouchableHighlight>
-                            <TouchableHighlight style={[styles.dialogBtnRightViewItem, {backgroundColor: 'blue'}]}
-                                                onPress={this.props.dialogRightBtnAction}>
+                            <TouchableHighlight
+                                style={[styles.dialogBtnRightViewItem, {backgroundColor: this.props.dialogThemeColor}]}
+                                onPress={(text) => {
+                                    this.props.dialogRightBtnAction(this.state.wifiPassword)
+                                }}>
                                 <Text style={styles.rightButton}>
                                     {this.props.dialogRightBtnTitle}
                                 </Text>
@@ -113,14 +124,19 @@ const styles = StyleSheet.create({
     },
 
     dialogContentView: {
-        width: SCREEN_WIDTH * 0.8,
-        height: SCREEN_HEIGHT * 0.1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        height: SCREEN_HEIGHT * 0.07,
+        borderRadius: 20,
+        marginLeft: 20,
+        marginRight: 20,
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderColor: '#999999',
+        bottom: 10,
+        marginTop: 17
     },
 
     dialogContent: {
-        textAlign: 'center',
+        textAlign: 'left',
         fontSize: 16,
         color: '#4A4A4A',
     },
@@ -129,6 +145,7 @@ const styles = StyleSheet.create({
         width: SCREEN_WIDTH * 0.8,
         height: SCREEN_HEIGHT * 0.06,
         flexDirection: 'row',
+        marginTop: 15
     },
 
     dialogBtnViewItem: {
@@ -146,7 +163,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
         borderWidth: 1,
         borderStyle: 'solid',
-        borderColor: '#999999'
+        borderColor: '#999999',
     },
 
     dialogBtnRightViewItem: {

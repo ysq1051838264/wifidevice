@@ -46,13 +46,15 @@ export default class WifiConfigSecond extends Component {
             BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
         }
 
-        NetInfo.isConnected.addEventListener('change', this.connectivity.bind(this));
-
         this.setState({
             themeColor: this.props.themeColor,
             wifiName: this.props.wifiName,
             wifiPassword: this.props.wifiPassword,
         });
+    }
+
+    componentDidMount() {
+        NetInfo.isConnected.addEventListener('change', this.connectivity.bind(this));
     }
 
     componentWillUnmount() {
