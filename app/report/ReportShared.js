@@ -33,7 +33,7 @@ var ReportShared = React.createClass({
             score: 0,
             bodyShapeStr: '',
             description: '',
-            isShareFlag: false,
+            isShareFlag: '',
             dataSource: new ListView.DataSource({
                 rowHasChanged: (r1, r2) => r1 !== r2
             })
@@ -186,8 +186,7 @@ var ReportShared = React.createClass({
     renderFooter(){
         return (
             <ReportCorderView
-                isShareFlag={this.state.isShareFlag}
-                themeColor={this.props.themeColor}
+                showCode={this.state.isShareFlag}
             />
         )
     },

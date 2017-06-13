@@ -147,7 +147,7 @@ export default class WifiSetting extends Component {
                 </View>
 
                 <View style={styles.bottomBar}>
-                    <QNButton color={this.state.themeColor} title={"重新配网"} onPress={this.startConfig.bind(this)}/>
+                    <QNButton color={this.state.themeColor} title={"开始配网"} onPress={this.startConfig.bind(this)}/>
                 </View>
             </View>
         );

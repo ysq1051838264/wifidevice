@@ -29,7 +29,7 @@ export default class ReportActivity extends Component {
             dataSource: new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2}),
             user: {},
             score: 0,
-            isShareFlag: false,
+            isShareFlag: '',
             description: "",
             bodyshape: "",
             measureDate: "",
@@ -229,8 +229,7 @@ export default class ReportActivity extends Component {
                     </View>
 
                     <ReportCorderView
-                        isShareFlag={this.state.isShareFlag}
-                        themeColor={this.props.themeColor}
+                        showCode={this.state.isShareFlag}
                     />
                 </View>
             </ScrollView>

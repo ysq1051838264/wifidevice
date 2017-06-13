@@ -50,7 +50,7 @@ export default class DeepinReportShared extends Component {
             visfat: 0,
             weight: "",
             weightControl: "",
-            isShareFlag: 0,
+            isShareFlag: '',
             isShowFattyLiverRisk: 0,
             weightControl: '',
             weightUnit: '公斤',
@@ -767,17 +767,14 @@ export default class DeepinReportShared extends Component {
 
     /*尾部显示*/
     renderFooterView(){
-
         if (this.props.shieldUserInfo == 1){
             return (
                 <View style={{height:20}}/>
             )
         }else  {
-            console.log('yyyyyyyy')
             return (
                 <ReportCorderView
-                    isShareFlag={this.state.isShareFlag}
-                    themeColor={this.props.themeColor}
+                    showCode={this.state.isShareFlag}
                 />
             )
         }
@@ -785,7 +782,6 @@ export default class DeepinReportShared extends Component {
 
     /*绘制view*/
     render() {
-
         return (
             <ScrollView showsVerticalScrollIndicator={false} style={{backgroundColor: '#F4F4F4'}}>
                 <View style={{backgroundColor: '#F4F4F4'}} onLayout={(e) => this.onLayout(e)}>
