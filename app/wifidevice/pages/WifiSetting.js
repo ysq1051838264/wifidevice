@@ -130,7 +130,7 @@ export default class WifiSetting extends Component {
                     <View style={styles.divider}/>
                     <View style={styles.formFieldContainer}>
                         <Icon name="ios-lock-outline" size={8 * PixelRatio.get()}/>
-                        <TextInput placeholder="请输入wifi密码" style={styles.formFieldTextInput}
+                        <TextInput placeholder="请输入WiFi密码" style={styles.formFieldTextInput}
                                    underlineColorAndroid='transparent'
                                    defaultValue={this.state.password}
                                    secureTextEntry={true}
@@ -140,9 +140,9 @@ export default class WifiSetting extends Component {
 
                 <View style={styles.container}>
                     <View style={styles.contentContainer}>
-                        <Text style={styles.tipText}>1. 输入您的wifi密码（未设置密码则无需密码）</Text>
+                        <Text style={styles.tipText}>1. 输入您的WiFi密码（未设置密码则无需密码）</Text>
                         <Text style={styles.tipText}>2. 点击“开始配网”，启动配网</Text>
-                        <Text style={[styles.tipText, {marginTop: 25}]}>配网过程中，请保持wifi连接状态</Text>
+                        <Text style={[styles.tipText, {marginTop: 25}]}>配网过程中，请保持WiFi连接状态</Text>
                     </View>
                 </View>
 

@@ -9,6 +9,7 @@ import {
     Text,
     StyleSheet,
     TextInput,
+    Platform,
     TouchableHighlight,
     View
 } from 'react-native';
@@ -27,6 +28,7 @@ export default  class ModalDialog extends Component {
 
     static propTypes = {
         dialogTitle: React.PropTypes.string,
+        setModalVisible:Platform.OS === 'android' ? React.PropTypes.func.isRequired : React.PropTypes.func ,
         dialogThemeColor: React.PropTypes.string,
         dialogContent: React.PropTypes.string, //内容
         dialogLeftBtnTitle: React.PropTypes.string,    //左按键标题
@@ -50,7 +52,7 @@ export default  class ModalDialog extends Component {
             <Modal
                 visible={this.props.dialogVisible}
                 transparent={true}
-                onRequestClose={() => {
+                onRequestClose={() => {this.props.setModalVisible
                 }}>
                 <View style={styles.bg}>
                     <View style={styles.dialog}>
@@ -125,7 +127,7 @@ const styles = StyleSheet.create({
 
     dialogContentView: {
         height: SCREEN_HEIGHT * 0.07,
-        borderRadius: 20,
+        borderRadius: 8,
         marginLeft: 20,
         marginRight: 20,
         borderWidth: 1,
@@ -139,6 +141,7 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         fontSize: 16,
         color: '#4A4A4A',
+        marginLeft:5
     },
 
     dialogBtnView: {

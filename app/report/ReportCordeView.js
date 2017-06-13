@@ -46,8 +46,8 @@ var ReportCorderView = React.createClass({
                                 fgColor='white'/>
                         </View>
                         <View style={styles.bottomTextContainer}>
+                            <Text style={styles.bottomBrandText}>{this.props.showCode.brand}</Text>
                             <Text style={styles.bottomText}>{this.props.showCode.companyName}</Text>
-                            <Text style={styles.bottomBuyText}>{this.props.showCode.companyAddress}</Text>
                         </View>
                     </View>
                 </Image>)
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         backgroundColor: 'transparent',
     },
-    bottomBuyText: {
+    bottomBrandText: {
         color: "#666666",
         fontSize: 12,
         backgroundColor: 'transparent',

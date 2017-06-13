@@ -108,11 +108,10 @@ export default class WiFiPairView extends Component {
                 if (this.isDestrory) {
                     return
                 }
-                this.stopConfig();
-                // this.setState({
-                //     device: {},
-                //     workState: Constant.STATE_FAIL,
-                // });
+                this.setState({
+                    device: {},
+                    workState: Constant.STATE_FAIL,
+                });
             })
     }
 
@@ -139,6 +138,9 @@ export default class WiFiPairView extends Component {
                             dialogRightBtnAction={(wifiPwd) => {
                                 this.dialogConfirm(wifiPwd)
                             }}
+                            setModalVisible={() => {
+                                this.dialogCancel()
+                            }}
                         />
                     </View>);
                 break;
@@ -159,6 +161,9 @@ export default class WiFiPairView extends Component {
                                 }}
                                 dialogRightBtnAction={(wifiPwd) => {
                                     this.dialogConfirm(wifiPwd)
+                                }}
+                                setModalVisible={() => {
+                                    this.dialogCancel()
                                 }}
                             />
 
@@ -194,6 +199,10 @@ export default class WiFiPairView extends Component {
                                 dialogRightBtnAction={(wifiPwd) => {
                                     this.dialogConfirm(wifiPwd)
                                 }}
+
+                                setModalVisible={() => {
+                                    this.dialogCancel()
+                                }}
                             />
                             <View style={{justifyContent: 'center', alignItems: 'center',}}>
                                 <Text style={styles.topText}>配网失败</Text>
@@ -206,9 +215,9 @@ export default class WiFiPairView extends Component {
                             </View>
                             <Text style={[styles.tipText, {marginTop: 40}]}>试试下面这些步骤</Text>
                             <Text style={styles.tipText}>1. 重新输入WiFi密码，确保密码正确</Text>
-                            <Text style={styles.tipText}>2. 检查wifi信号强度，确保wifi连接状态良好</Text>
+                            <Text style={styles.tipText}>2. 检查WiFi信号强度，确保WiFi连接状态良好</Text>
                             <Text style={styles.tipText}>3. 重新启动秤端配网模式，具体方法参考上一页面</Text>
-                            <Text style={styles.tipText}>4. 确认Wifi允许陌生设备接入</Text>
+                            <Text style={styles.tipText}>4. 确认WiFi允许陌生设备接入</Text>
                         </View>
 
                         <View style={styles.bottomBar}>
@@ -340,7 +349,7 @@ const styles = StyleSheet.create({
 
     btn: {
         width: 200,
-        height: 40,
+        height: 34,
         marginTop: 15,
         alignItems: 'center',
         borderWidth: 1,
@@ -349,8 +358,8 @@ const styles = StyleSheet.create({
     },
 
     btnText: {
-        height: 40,
-        fontSize: 18,
+        height: 32,
+        fontSize: 16,
         textAlignVertical: 'center',
     },
 
