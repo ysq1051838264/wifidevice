@@ -24,6 +24,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import QNButton from '../component/QNButton';
 import NavigationBar from '../component/NavigationBar';
 import WifiSetting from './WifiSetting';
+import MeasureHttpClient from "../http/MeasureHttpClient";
+import Spinner from 'react-native-spinkit';
 
 export default class WifiConfigFirst extends Component {
     constructor(props) {
@@ -39,10 +41,12 @@ export default class WifiConfigFirst extends Component {
             BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
         } else {
             NativeModules.SmartLinker.getWifiState().then(
+
             );
         }
         this.setState({
             themeColor: this.props.themeColor,
+            isWiFiFlag: this.props.isWiFiFlag
         });
     }
 
@@ -105,6 +109,16 @@ export default class WifiConfigFirst extends Component {
         }
     }
 
+    fetchConfig() {
+        MeasureHttpClient.personalCenter().then((data) => {
+            this._next()
+        }).catch(e => {
+            this.setState({
+                isWiFiFlag:false,
+            });
+        });
+    }
+
     render() {
         var themeColor = this.state.themeColor;
 
@@ -112,19 +126,37 @@ export default class WifiConfigFirst extends Component {
         var bottomView;
 
         if (this.state.isWiFiFlag) {
+            this.fetchConfig()
             wifiStatusView = (
-                <View style={styles.wifiStatus}>
-                    <Image source={require('../imgs/icons/wifi_status_flag.png')}
-                           style={{
-                               backgroundColor: themeColor,
-                               width: 60,
-                               height: 60,
-                           }}/>
-                    <Text style={{color: themeColor, marginTop: 10}}> 完成</Text>
-                </View>);
-            bottomView = (<QNButton color={themeColor } title="下一步" onPress={this._next.bind(this)}/>)
+                <View style={styles.contentContainer}>
+                    <View style={styles.topContainer}>
+                        <Text style={styles.topText}>正在测试网络是否正常</Text>
+                        <View style={styles.wifiLogoContainer}>
+                            <Icon name="ios-wifi" size={10 * PixelRatio.get()}/>
+                        </View>
+                    </View>
+
+                    <View style={styles.wifiStatus}>
+                        <View style={styles.wifiStatus}>
+                            <Spinner size={100} type="Bounce" color={this.state.themeColor}
+                                     isVisible={!this.state.isDialogVisible}/>
+                        </View>
+                    </View>
+                </View>
+
+            );
+            bottomView = null
         } else {
-            wifiStatusView = null;
+            wifiStatusView = (<View style={styles.contentContainer}>
+                <View style={styles.topContainer}>
+                    <Text style={styles.topText}>首先，在您的手机上启动 Wifi</Text>
+                    <View style={styles.wifiLogoContainer}>
+                        <Icon name="ios-wifi" size={10 * PixelRatio.get()}/>
+                    </View>
+                </View>
+                <View style={styles.wifiStatus}>
+                </View>
+            </View>);
 
             if (Platform.OS == 'ios' && this.state.isWiFiFlag == false) {
                 bottomView = (
@@ -133,24 +165,13 @@ export default class WifiConfigFirst extends Component {
             } else {
                 bottomView = (<QNButton color={themeColor } title="设置网络" onPress={this.goWifiConfig.bind(this)}/>)
             }
-
         }
 
         return (
             <View style={[commonStyles.main, commonStyles.wrapper, {backgroundColor: 'white',}]}>
                 <NavigationBar title="连接" leftAction={this.backOnPress.bind(this)}/>
-                <View style={styles.contentContainer}>
-                    <View style={styles.topContainer}>
-                        <Text style={styles.topText}> 首先，在您的手机上启动 Wifi</Text>
-                        <View style={styles.wifiLogoContainer}>
-                            <Icon name="ios-wifi" size={10 * PixelRatio.get()}/>
-                        </View>
-                    </View>
 
-                    <View style={styles.wifiStatus}>
-                        {wifiStatusView}
-                    </View>
-                </View>
+                {wifiStatusView}
 
                 <View style={styles.bottomBar}>
                     {bottomView}

@@ -29,35 +29,19 @@ export default class root extends Component {
     }
 
     render() {
-        var view;
-        if(this.props.isWiFiFlag){
-            view = (<Navigator
-                ref={view => this.navigator = view}
-                initialRoute={{
-                    component: WifiSetting,
-                    name: 'wifi_config_second',
-                    params: {
-                        themeColor: this.props.themeColor,
-                    }
-                }}
-                configureScene={this.configureScene.bind(this)}
-                renderScene={this.renderScene.bind(this)}
-            />);
-        } else{
-            view = (<Navigator
-                ref={view => this.navigator = view}
-                initialRoute={{
-                    component: WifiConfigFirst,
-                    name: 'wifi_config_first',
-                    params: {
-                        themeColor: this.props.themeColor,
-                    }
-                }}
-                configureScene={this.configureScene.bind(this)}
-                renderScene={this.renderScene.bind(this)}
-            />);
-        }
-        return (view);
+        return (<Navigator
+            ref={view => this.navigator = view}
+            initialRoute={{
+                component: WifiConfigFirst,
+                name: 'wifi_config_first',
+                params: {
+                    themeColor: this.props.themeColor,
+                    isWiFiFlag: this.props.isWiFiFlag
+                }
+            }}
+            configureScene={this.configureScene.bind(this)}
+            renderScene={this.renderScene.bind(this)}
+        />);
     }
 }
 

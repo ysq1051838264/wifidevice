@@ -24,7 +24,7 @@ import {
 import NavigationBar from '../component/NavigationBar';
 import QNButton from '../component/QNButton';
 import ModalDialog from '../component/ModalDialog';
-import BindSuccess from './BindSuccess';
+import EnterWeightView from './EnterWeightView';
 import Spinner from 'react-native-spinkit';
 import * as Constant from '../constant/constant';
 import MeasureHttpClient from "../http/MeasureHttpClient";
@@ -138,9 +138,6 @@ export default class WiFiPairView extends Component {
                             dialogRightBtnAction={(wifiPwd) => {
                                 this.dialogConfirm(wifiPwd)
                             }}
-                            setModalVisible={() => {
-                                this.dialogCancel()
-                            }}
                         />
                     </View>);
                 break;
@@ -161,9 +158,6 @@ export default class WiFiPairView extends Component {
                                 }}
                                 dialogRightBtnAction={(wifiPwd) => {
                                     this.dialogConfirm(wifiPwd)
-                                }}
-                                setModalVisible={() => {
-                                    this.dialogCancel()
                                 }}
                             />
 
@@ -278,7 +272,7 @@ export default class WiFiPairView extends Component {
 
         MeasureHttpClient.bindDevice(scale_name, internal_model, mac, scale_type, device_type)
             .then((device) => {
-                this.toBindSuccess(data);
+                this.toEnterWeight(data);
             })
             .catch(e => {
                 console.log(e);
@@ -305,7 +299,8 @@ export default class WiFiPairView extends Component {
         }
     }
 
-    toBindSuccess(device) {
+    toEnterWeight(device) {
+        //如果有体重，则进入检测界面，否则需要去设置体重
         Platform.OS === 'android' ? ToastAndroid.show("绑定成功，请上秤", ToastAndroid.SHORT) : AlertIOS.alert("绑定成功，请上秤");
         if (Platform.OS === 'android') {
             NativeModules.AynsMeasureModule.toMeasureView();
@@ -315,15 +310,13 @@ export default class WiFiPairView extends Component {
 
         // const {navigator} = this.props;
         // navigator.push({
-        //     component: BindSuccess,
-        //     name: 'bind_success',
+        //     component: EnterWeightView,
+        //     name: 'enter_weight',
         //     params: {
         //         themeColor: this.state.themeColor,
-        //         mac: this.state.device.mac,
         //     }
         // });
     }
-
 }
 
 const styles = StyleSheet.create({

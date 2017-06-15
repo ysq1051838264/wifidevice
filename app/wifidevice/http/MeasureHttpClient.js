@@ -70,6 +70,11 @@ export default class MeasureActions {
         })
     }
 
+    //用版本升级的接口测试网络的连通性
+    static personalCenter() {
+        return Promise.race([Api.doGet(path_personal_center,{}), Api.timeout()]);
+    }
+
 }
 
 const path_get_device_model = "/api/v5/devices/get_model.json";
@@ -80,5 +85,11 @@ const path_fetch_last_data = "/api/v5/measurements.json";
 const path_delete_invalid_data = "/api/v5/measurements/delete_invalid_data.json";
 //分配未知数据接口
 const path_assign_invalid_data = "/api/v5/measurements/assign_invalid_data.json";
+
 const path_occupy_measure = "/api/v5/devices/link.json";
+
+//个人中心
+const path_personal_center = "/api/v5/beans/personal_center.json";
+
+
 

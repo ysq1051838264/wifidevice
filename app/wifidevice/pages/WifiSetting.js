@@ -28,6 +28,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import QNButton from '../component/QNButton';
 import NavigationBar from '../component/NavigationBar';
 import WifiConfigSecond from './WifiConfigSecond';
+import EnterWeightView from './EnterWeightView';
 
 var {SmartLinker, QNDeviceInfo} = NativeModules;
 
@@ -133,7 +134,6 @@ export default class WifiSetting extends Component {
                         <TextInput placeholder="请输入WiFi密码" style={styles.formFieldTextInput}
                                    underlineColorAndroid='transparent'
                                    defaultValue={this.state.password}
-                                   secureTextEntry={true}
                                    onChangeText={(text) => this.setState({password: text})}/>
                     </View>
                 </View>
@@ -142,15 +142,26 @@ export default class WifiSetting extends Component {
                     <View style={styles.contentContainer}>
                         <Text style={styles.tipText}>1. 输入您的WiFi密码（未设置密码则无需密码）</Text>
                         <Text style={styles.tipText}>2. 点击“开始配网”，启动配网</Text>
-                        <Text style={[styles.tipText, {marginTop: 25}]}>配网过程中，请保持WiFi连接状态</Text>
+                        <Text style={[styles.tipText, {marginTop: 15}]}>配网过程中，请保持WiFi连接状态</Text>
                     </View>
                 </View>
 
                 <View style={styles.bottomBar}>
-                    <QNButton color={this.state.themeColor} title={"开始配网"} onPress={this.startConfig.bind(this)}/>
+                    <QNButton color={this.state.themeColor} title={"开始配网"} onPress={this.toWeight.bind(this)}/>
                 </View>
             </View>
         );
+    }
+
+    toWeight(){
+        const {navigator} = this.props;
+        navigator.push({
+            component: EnterWeightView,
+            name: 'enter_weight',
+            params: {
+                themeColor: this.state.themeColor,
+            }
+        });
     }
 
 }

@@ -90,11 +90,11 @@ var ReportShared = React.createClass({
                 <ListView
                     dataSource={this.state.dataSource}
                     renderRow={this.renderCell}
-                    renderHeader ={this.renderHeader}
-                    style={{width: 320,backgroundColor: 'white',height:this.props.height}}
+                    renderHeader={this.renderHeader}
+                    style={{width: 320, backgroundColor: 'white', height: this.props.height}}
                     bounces={false}
                     showsVerticalScrollIndicator={false}
-                    pageSize = {15}
+                    pageSize={15}
                     onLayout={(e) => this.onLayout(e)}
                     renderFooter={this.renderFooter}
                 />
@@ -104,15 +104,15 @@ var ReportShared = React.createClass({
 
     //HeaderView
     renderHeader(){
-            var f = this.state.score.toFixed(1) * 10;
-            const scoreString = f + "分";
-            const bigScore = scoreString.substr(0, scoreString.length - 2);
-            const smallScore = "." + scoreString.substr(scoreString.length - 2, scoreString.length);
+        var f = this.state.score.toFixed(1) * 10;
+        const scoreString = f + "分";
+        const bigScore = scoreString.substr(0, scoreString.length - 2);
+        const smallScore = "." + scoreString.substr(scoreString.length - 2, scoreString.length);
 
-            var scoreView = (<View style={styles.scoreStyle}>
-                <Text style={[styles.scoreLeftStyle, {color: this.props.themeColor}]}>{bigScore}</Text>
-                <Text style={[styles.scoreRightStyle, {color: this.props.themeColor}]}> {smallScore}</Text>
-            </View>);
+        var scoreView = (<View style={styles.scoreStyle}>
+            <Text style={[styles.scoreLeftStyle, {color: this.props.themeColor}]}>{bigScore}</Text>
+            <Text style={[styles.scoreRightStyle, {color: this.props.themeColor}]}> {smallScore}</Text>
+        </View>);
 
         return (
             <View style={styles.headerViewStyle}>
@@ -146,35 +146,51 @@ var ReportShared = React.createClass({
     },
 
     //cell
-    renderCell(data,sectionId,rowId){
+    renderCell(data, sectionId, rowId){
         var topDis = 0;
         var secHeight = 49;
-        if (rowId == 0){
-          topDis = -1;
-          secHeight = 50;
-        }else{
-          topDis = 0;
-          secHeight = 49;
+        if (rowId == 0) {
+            topDis = -1;
+            secHeight = 50;
+        } else {
+            topDis = 0;
+            secHeight = 49;
         }
         return (
             <View style={styles.cellViewStyle}>
                 {/*图标*/}
-                <View style={{flexDirection: 'row', alignItems: 'center', height: 50, backgroundColor: 'rgb(230, 230, 230)'}}>
-                    <View style={{width: 42,backgroundColor:'white', height: 50, flexDirection: 'row', alignItems: 'center'}}>
+                <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    height: 50,
+                    backgroundColor: 'rgb(230, 230, 230)'
+                }}>
+                    <View style={{
+                        width: 42,
+                        backgroundColor: 'white',
+                        height: 50,
+                        flexDirection: 'row',
+                        alignItems: 'center'
+                    }}>
                         <Image source={this.getScaleIcon(data.title)} style={styles.scaleIconStyle}/>
                     </View>
-                    <View style={{height: secHeight, backgroundColor: 'white', width: ScreenWidth - 42, marginTop: topDis}}>
-                        <View style={{flexDirection: 'row', alignItems: 'center',height: secHeight}} >
-                          {/*指标名称*/}
+                    <View style={{
+                        height: secHeight,
+                        backgroundColor: 'white',
+                        width: ScreenWidth - 42,
+                        marginTop: topDis
+                    }}>
+                        <View style={{flexDirection: 'row', alignItems: 'center', height: secHeight}}>
+                            {/*指标名称*/}
                             <Text style={[styles.scaleTitleStyle, {flex: 4}]}>{data.title}</Text>
-                          {/*指标数值*/}
+                            {/*指标数值*/}
                             <View style={{flex: 3, flexDirection: 'row'}}>
                                 <Text style={styles.scaleValueStyle}>{data.scaleValue}</Text>
                                 <Text style={styles.saleUnitStyle}>{data.unit}</Text>
                             </View>
-                          {/*指标的判断*/}
+                            {/*指标的判断*/}
                             <View style={{flex: 3, flexDirection: 'row-reverse'}}><Text
-                              style={[styles.rsTypeStyle, {color: this.getColor(data.rsType)}, {borderColor: this.getColor(data.rsType)}]}>{data.rsType}</Text>
+                                style={[styles.rsTypeStyle, {color: this.getColor(data.rsType)}, {borderColor: this.getColor(data.rsType)}]}>{data.rsType}</Text>
                             </View>
                         </View>
                     </View>
@@ -288,18 +304,30 @@ var ReportShared = React.createClass({
 
     getColor(target){
         var color;
-        if (target == "严重偏低") {
+        if (target === "严重偏低") {
             color = '#A98CE9'
-        } else if (target == "偏低") {
+        } else if (target === "偏低") {
             color = '#39BEE7'
-        } else if (target == "偏高") {
+        } else if (target === "偏高") {
             color = '#FFC028'
-        } else if (target == "严重偏高") {
+        } else if (target === "严重偏高") {
             color = '#E74C3C'
-        } else if (target == "充足") {
+        } else if (target === "充足") {
             color = '#53A505'
-        } else if (target == "不达标") {
+        } else if (target === "不达标") {
             color = '#FFC028'
+        } else if (target === "重度肥胖") {
+            color = '#AC271E'
+        } else if (target === "中度肥胖") {
+            color = '#E74C3C'
+        } else if (target === "轻度肥胖") {
+            color = '#F7931E'
+        } else if (target === "超重") {
+            color = '#FFC028'
+        } else if (target === "肥胖") {
+            color = '#FFC028'
+        } else if (target === "正常") {
+            color = '#AACC1D'
         } else {
             color = '#AACC1D'
         }

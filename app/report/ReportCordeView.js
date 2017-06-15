@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     },
     bottomText: {
         color: "#666666",
-        fontSize: 18,
+        fontSize: 16,
         backgroundColor: 'transparent',
     },
     bottomBrandText: {

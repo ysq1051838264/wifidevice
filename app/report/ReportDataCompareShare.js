@@ -91,6 +91,18 @@ export default class ReportDataCompareShare extends Component {
             color = '#53A505'
         } else if (target === "不达标") {
             color = '#FFC028'
+        } else if (target ==="重度肥胖") {
+            color = '#AC271E'
+        } else if (target ==="中度肥胖") {
+            color = '#E74C3C'
+        } else if (target ==="轻度肥胖") {
+            color = '#F7931E'
+        } else if (target ==="超重"){
+            color = '#FFC028'
+        } else if (target ==="肥胖") {
+            color = '#FFC028'
+        } else if (target ==="正常") {
+            color = '#AACC1D'
         } else {
             color = '#AACC1D'
         }
@@ -104,8 +116,8 @@ export default class ReportDataCompareShare extends Component {
         var bodyshapeView;
         var vsBodyshapeView;
         if (data.title === "体型") {
-            vsBodyshapeView =(<View style={{flexDirection: 'row-reverse', flex: 2, justifyContent: 'center'}}/>);
-            bodyshapeView =(<View style={{flexDirection: 'row-reverse', flex: 2, justifyContent: 'center'}}/>);
+            vsBodyshapeView = (<View style={{flexDirection: 'row-reverse', flex: 2, justifyContent: 'center'}}/>);
+            bodyshapeView = (<View style={{flexDirection: 'row-reverse', flex: 2, justifyContent: 'center'}}/>);
         } else {
             vsBodyshapeView = (<View style={{flexDirection: 'row-reverse', flex: 2, justifyContent: 'center'}}>
                 <Text style={[styles.rsTypeStyle, {color: vsBgColor}, {borderColor: vsBgColor}]}>{data.vsRsType}</Text>
