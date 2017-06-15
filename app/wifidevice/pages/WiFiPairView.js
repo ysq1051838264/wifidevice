@@ -101,7 +101,11 @@ export default class WiFiPairView extends Component {
                     throw "Component is destroy"
                 }
 
-                this.bindDevice(device);
+                //如果有体重，则进入检测界面，否则需要去设置体重
+                if (this.props.isHasWeightFlag)
+                    this.bindDevice(device);
+                else
+                    this.toEnterWeight(device);
             })
             .catch(e => {
                 console.log('配网失败', e);
@@ -272,7 +276,12 @@ export default class WiFiPairView extends Component {
 
         MeasureHttpClient.bindDevice(scale_name, internal_model, mac, scale_type, device_type)
             .then((device) => {
-                this.toEnterWeight(data);
+                Platform.OS === 'android' ? ToastAndroid.show("绑定成功，请上秤", ToastAndroid.SHORT) : AlertIOS.alert("绑定成功，请上秤");
+                if (Platform.OS === 'android') {
+                    NativeModules.AynsMeasureModule.toMeasureView();
+                } else {
+                    NativeModules.QNUI.popTwoViewController();
+                }
             })
             .catch(e => {
                 console.log(e);
@@ -300,22 +309,15 @@ export default class WiFiPairView extends Component {
     }
 
     toEnterWeight(device) {
-        //如果有体重，则进入检测界面，否则需要去设置体重
-        Platform.OS === 'android' ? ToastAndroid.show("绑定成功，请上秤", ToastAndroid.SHORT) : AlertIOS.alert("绑定成功，请上秤");
-        if (Platform.OS === 'android') {
-            NativeModules.AynsMeasureModule.toMeasureView();
-        } else {
-            NativeModules.QNUI.popTwoViewController();
-        }
-
-        // const {navigator} = this.props;
-        // navigator.push({
-        //     component: EnterWeightView,
-        //     name: 'enter_weight',
-        //     params: {
-        //         themeColor: this.state.themeColor,
-        //     }
-        // });
+        const {navigator} = this.props;
+        navigator.push({
+            component: EnterWeightView,
+            name: 'enter_weight',
+            params: {
+                data: device,
+                themeColor: this.state.themeColor,
+            }
+        });
     }
 }
 

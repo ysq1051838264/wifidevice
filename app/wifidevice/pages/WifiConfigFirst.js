@@ -94,9 +94,10 @@ export default class WifiConfigFirst extends Component {
         const {navigator} = this.props;
         navigator.resetTo({
             component: WifiSetting,
-            name: 'wifi_config_second',
+            name: 'wifi_setting',
             params: {
                 themeColor: this.state.themeColor,
+                isHasWeightFlag: this.props.isHasWeightFlag
             }
         });
     }

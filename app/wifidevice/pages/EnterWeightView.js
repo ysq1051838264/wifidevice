@@ -16,6 +16,7 @@ import  {
     PixelRatio,
     Platform,
     Dimensions,
+    ScrollView,
     AlertIOS
 } from 'react-native';
 
@@ -26,8 +27,11 @@ import React, {
 import NavigationBar from "../component/NavigationBar";
 import commonStyles from '../styles/common';
 import QNButton from '../component/QNButton';
+import MeasureHttpClient from "../http/MeasureHttpClient";
 
 var RulerView = require('../component/RulerView');
+
+var currentWeight = 60;
 
 export default class EnterWeightView extends Component {
     constructor(props) {
@@ -52,7 +56,6 @@ export default class EnterWeightView extends Component {
         }
     }
 
-
     goHome() {
         if (Platform.OS == 'ios') {
             NativeModules.SmartLinker.anysMesasure(this.props.mac)
@@ -73,16 +76,38 @@ export default class EnterWeightView extends Component {
     };
 
     checkData() {
-        Platform.OS === 'android' ? ToastAndroid.show("绑定成功，请上秤", ToastAndroid.SHORT) : AlertIOS.alert("绑定成功，请上秤");
-        if (Platform.OS === 'android') {
-            NativeModules.AynsMeasureModule.toMeasureView();
-        } else {
-            NativeModules.QNUI.popTwoViewController();
-        }
+        const {scale_name, internal_model, mac, scale_type, device_type} = this.props.data;
+
+        MeasureHttpClient.bindDevice(scale_name, internal_model, mac, scale_type, device_type)
+            .then((device) => {
+                MeasureHttpClient.saveWeight(currentWeight).then(() => {
+                    console.log("保存体重，获取到了数据：");
+                    Platform.OS === 'android' ? ToastAndroid.show("绑定成功，请上秤", ToastAndroid.SHORT) : AlertIOS.alert("绑定成功，请上秤");
+                    if (Platform.OS === 'android') {
+                        NativeModules.AynsMeasureModule.toMeasureView();
+                    } else {
+                        NativeModules.QNUI.popTwoViewController();
+                    }
+                })
+            }).catch(e => {
+            Platform.OS === 'android' ? ToastAndroid.show("绑定失败，请重试", ToastAndroid.SHORT) : AlertIOS.alert("绑定失败，请重试");
+        });
+
     }
 
     render() {
         const {themeColor} = this.state.themeColor;
+
+        var ruler;
+        if (Platform.OS === 'android') {
+            ruler = (
+                <RulerView style={styles.rulerView}
+                           color={themeColor}
+                           onScrollChange={(event) => this.onWebViewScroll(event)}></RulerView>);
+        } else {
+
+
+        }
 
         return (
             <View style={[commonStyles.main, commonStyles.wrapper]}>
@@ -92,22 +117,18 @@ export default class EnterWeightView extends Component {
                 </View>
                 <View style={styles.contentContainer}>
                     <Text style={{fontSize: 16, marginTop: 10, color: 'black'}}>体重</Text>
-
-                    <RulerView style={styles.rulerView}
-                               color={themeColor}
-                               onScrollChange={(event) => this.onWebViewScroll(event)}></RulerView>
-
+                    {ruler}
                 </View>
                 <View style={styles.bottomBar}>
                     <QNButton color={this.state.themeColor} title="测量完成" onPress={this.checkData.bind(this)}/>
                 </View>
-
             </View>
         );
     }
 
     onWebViewScroll(event) {
         console.log("当前体重：", event);
+        currentWeight = event;
     }
 }
 
@@ -160,6 +181,7 @@ const styles = StyleSheet.create({
     },
     rulerView: {
         width: Dimensions.get('window').width,
-        height: 200
+        height: Dimensions.get('window').height / 2,
+        marginTop: 20
     }
 });

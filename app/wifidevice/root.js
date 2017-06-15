@@ -36,7 +36,8 @@ export default class root extends Component {
                 name: 'wifi_config_first',
                 params: {
                     themeColor: this.props.themeColor,
-                    isWiFiFlag: this.props.isWiFiFlag
+                    isWiFiFlag: this.props.isWiFiFlag,
+                    isHasWeightFlag: this.props.isHasWeightFlag
                 }
             }}
             configureScene={this.configureScene.bind(this)}

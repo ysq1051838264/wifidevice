@@ -50,10 +50,11 @@ export default class DeepinReportShared extends Component {
             visfat: 0,
             weight: "",
             weightControl: "",
-            isShareFlag: '',
+            isShareFlag: {},
             isShowFattyLiverRisk: 0,
             weightControl: '',
             weightUnit: '公斤',
+            BMICustomSet: 0,
         }
         ;
     }
@@ -108,20 +109,20 @@ export default class DeepinReportShared extends Component {
     /*体重信息subview*/
     renderUserInfoView() {
 
-        if (this.props.shieldUserInfo == 1){
+        if (this.props.shieldUserInfo === 1){
             return (
                 <View style={{height:1}}/>
             )
         }else  {
             /*处理用户头像*/
             const avatarUrl = this.state.user.avatar;
-            if (avatarUrl == "") {
-                var icon = this.state.user.gender == 1 ? require("../imgs/avatar_man.png") : require("../imgs/avatar_man.png");
+            if (avatarUrl === "") {
+                var icon = this.state.user.gender === 1 ? require("../imgs/avatar_man.png") : require("../imgs/avatar_man.png");
             }
             return (
                 <View style={styles.userInfoView}>
                     <Image source={require('../imgs/report_head.png')} style={styles.userInfoView_baseImage}>
-                        <Image source={(avatarUrl == "" ? icon : {uri: avatarUrl}) }
+                        <Image source={(avatarUrl === "" ? icon : {uri: avatarUrl}) }
                                style={styles.userInfoView_userIcon}/>
                         <View style={ styles.userInfoView_baseTextView}>
                             <Text style={styles.userInfoView_userNameText}>{this.state.user.username}</Text>
@@ -144,7 +145,7 @@ export default class DeepinReportShared extends Component {
 
         var unit;
         var font;
-        if (title == "体重") {
+        if (title === "体重") {
             unit = this.state.weightUnit;
             font = 11;
         } else {
@@ -172,7 +173,7 @@ export default class DeepinReportShared extends Component {
 
         var showStr;
         var unitStr;
-        if (text == "无需控制") {
+        if (text === '无需控制') {
 
             showStr = "";
             unitStr ="";
@@ -238,10 +239,10 @@ export default class DeepinReportShared extends Component {
     /*肌肉控制subview*/
     renderMuscleControlSubview(text) {
         var icon;
-        if (text == "肌肉比率低") {
+        if (text === "肌肉比率低") {
             icon = require('../imgs/deepinReport_muscle_status_0.png');
 
-        } else if (text == "肌肉比率标准") {
+        } else if (text === "肌肉比率标准") {
             icon = require('../imgs/deepinReport_muscle_status_1.png');
         } else {
             icon = require('../imgs/deepinReport_muscle_status_2.png');
@@ -288,7 +289,7 @@ export default class DeepinReportShared extends Component {
 
         var color;
         var textStr;
-        if (index == 0 || index == 1) {//级别0  通常表示严重偏低  级别1  通常表示偏低
+        if (index === 0 || index === 1) {//级别0  通常表示严重偏低  级别1  通常表示偏低
             if (title === "基础代谢量") {
                 textStr = "低";
                 color = "#A98CE9";
@@ -301,10 +302,10 @@ export default class DeepinReportShared extends Component {
                 color = "#A98CE9";
             }
 
-        } else if (index == 2) {//级别2  通常表示正常
+        } else if (index === 2) {//级别2  通常表示正常
             textStr = "正常";
             color = '#AACC1D';
-        } else if (index == 3 || index == 4) {//级别3  通常表示偏高 //级别4  通常表示严重偏高
+        } else if (index === 3 || index == 4) {//级别3  通常表示偏高 //级别4  通常表示严重偏高
             if (title === "蛋白质" || title === "无机盐" || title === "基础代谢量") {
                 color = '#AACC1D';
                 textStr = "正常";
@@ -336,17 +337,17 @@ export default class DeepinReportShared extends Component {
         var textStr;
         var show_Y;
         var index_Y;
-        if (index == 0 || index == 1) {//级别0  通常表示严重偏低  级别1  通常表示偏低
+        if (index === 0 || index === 1) {//级别0  通常表示严重偏低  级别1  通常表示偏低
             textStr = "低";
             color = "#A98CE9";
             show_Y = 62;
             index_Y = 57;
-        } else if (index == 2) {//级别2  通常表示正常
+        } else if (index === 2) {//级别2  通常表示正常
             textStr = "正常";
             color = '#AACC1D';
             show_Y = 45;
             index_Y = 40;
-        } else if (index == 3 || index == 4) {//级别3  通常表示偏高 //级别4  通常表示严重偏高
+        } else if (index === 3 || index === 4) {//级别3  通常表示偏高 //级别4  通常表示严重偏高
             color = '#AACC1D';
             textStr = "正常";
             show_Y = 45;
@@ -373,7 +374,7 @@ export default class DeepinReportShared extends Component {
         var color;
         var textStr;
         var index_Y;
-        if (index == 0 || index == 1) {
+        if (index === 0 || index === 1) {
             textStr = "高";
             color = "#E74C3C";
             index_Y = 12;
@@ -397,90 +398,228 @@ export default class DeepinReportShared extends Component {
     }
 
     /*肥胖状况 subView*/
-    renderBMIAndBodyfatInfoView(BMIindex, bodyfatIndex) {
+    renderBMIAndBodyfatInfoView(BMIindex, bodyfatIndex,setType) {
 
-        // BMIindex = 3
-        // bodyfatIndex = 1;
-        var bmiWidth;
-        var bmiColor;
-        var bmiTitleW;
+        if (setType === 0) {
+            var bmiWidth;
+            var bmiColor;
+            var bmiTitleW;
 
-        if (BMIindex == 1) {
-            bmiWidth = 35;
-            bmiTitleW = 35;
-            bmiColor = "#A98CE9";
-        } else if (BMIindex == 2) {
-            bmiWidth = 122;
-            bmiTitleW = 122;
-            bmiColor = '#AACC1D';
-        } else {
-            bmiWidth = 209;
-            bmiTitleW = 209;
-            bmiColor = "#F1C43C";
-        }
+            if (BMIindex === 0) {
+                bmiWidth = 35;
+                bmiTitleW = 35;
+                bmiColor = "#A98CE9";
+            } else if (BMIindex === 1) {
+                bmiWidth = 122;
+                bmiTitleW = 122;
+                bmiColor = '#AACC1D';
+            } else {
+                bmiWidth = 209;
+                bmiTitleW = 209;
+                bmiColor = "#F1C43C";
+            }
 
-        var bodyFatWidth;
-        var bodyFatColor;
-        var bodyFatTitleW;
-        if (bodyfatIndex == 1) {
-            bodyFatWidth = 35;
-            bodyFatTitleW = 35;
-            bodyFatColor = "#A98CE9";
-        } else if (bodyfatIndex == 2) {
-            bodyFatWidth = 122;
-            bodyFatTitleW = 122;
-            bodyFatColor = '#AACC1D';
-        } else {
-            bodyFatWidth = 209;
-            bodyFatTitleW = 209;
-            bodyFatColor = "#F1C43C";
-        }
-        if (bodyFatWidth == bmiWidth) {
-            bmiTitleW = bmiWidth - 25;
-            bodyFatTitleW = bodyFatWidth - 25;
-        } else {
-            bmiTitleW = bmiWidth - 10;
-            bodyFatTitleW = bodyFatWidth - 45;
-        }
+            var bodyFatWidth;
+            var bodyFatColor;
+            var bodyFatTitleW;
+            if (bodyfatIndex === 1) {
+                bodyFatWidth = 35;
+                bodyFatTitleW = 35;
+                bodyFatColor = "#A98CE9";
+            } else if (bodyfatIndex === 2) {
+                bodyFatWidth = 122;
+                bodyFatTitleW = 122;
+                bodyFatColor = '#AACC1D';
+            } else {
+                bodyFatWidth = 209;
+                bodyFatTitleW = 209;
+                bodyFatColor = "#F1C43C";
+            }
+            if (bodyFatWidth === bmiWidth) {
+                bmiTitleW = bmiWidth - 25;
+                bodyFatTitleW = bodyFatWidth - 25;
+            } else {
+                bmiTitleW = bmiWidth - 10;
+                bodyFatTitleW = bodyFatWidth - 45;
+            }
 
-        return (
+            return (
 
-            <View style={styles.BMIAndBodyfatInfoView}>
-                <View style={{
-                    width: 260,
-                    height: 18,
-                    backgroundColor: 'rgba(255, 255, 255, 0.0)',
-                    flexDirection: 'row',
-                }}>
-                    <Text
-                        style={[styles.BMIAndBodyfatInfoView_title, {left: bmiTitleW}, {color: bmiColor}, {fontSize: 13}, {paddingTop: -2}]}>BMI</Text>
-                    <Text
-                        style={[styles.BMIAndBodyfatInfoView_title, {color: bodyFatColor}, {left: bodyFatTitleW}]}>体脂肪</Text>
-                </View>
-                <View style={styles.BMIAndBodyfatInfoView_base}>
+                <View style={styles.BMIAndBodyfatInfoView}>
+                    <View style={{
+                        width: 260,
+                        height: 18,
+                        backgroundColor: 'rgba(255, 255, 255, 0.0)',
+                        flexDirection: 'row',
+                    }}>
+                        <Text
+                            style={[styles.BMIAndBodyfatInfoView_title, {left: bmiTitleW}, {color: bmiColor}, {fontSize: 13}, {paddingTop: -2}]}>BMI</Text>
+                        <Text
+                            style={[styles.BMIAndBodyfatInfoView_title, {color: bodyFatColor}, {left: bodyFatTitleW}]}>体脂肪</Text>
+                    </View>
+                    <View style={styles.BMIAndBodyfatInfoView_base}>
 
-                    <Image source={require('../imgs/deepinReport_fat_level.png')}
-                           style={styles.BMIAndBodyfatInfoView_icon_line}>
-                    </Image>
-                    <Image source={require('../imgs/deepinReport_fat_indicator.png')}
-                           style={[styles.BMIAndBodyfatInfoView_icon_show, {left: bmiWidth}, {tintColor: bmiColor}]}>
-                        <View style={{width: 8, height: 8, borderRadius: 4, backgroundColor: "white", top: -1}}></View>
+                        <Image source={require('../imgs/deepinReport_fat_level.png')}
+                               style={styles.BMIAndBodyfatInfoView_icon_line}>
+                        </Image>
+                        <Image source={require('../imgs/deepinReport_fat_indicator.png')}
+                               style={[styles.BMIAndBodyfatInfoView_icon_show, {left: bmiWidth}, {tintColor: bmiColor}]}>
+                            <View style={{
+                                width: 8,
+                                height: 8,
+                                borderRadius: 4,
+                                backgroundColor: "white",
+                                top: -1
+                            }}></View>
 
-                    </Image>
-                    <Image source={require('../imgs/deepinReport_fat_indicator.png')}
-                           style={[styles.BMIAndBodyfatInfoView_icon_show, {left: bodyFatWidth}, {tintColor: bodyFatColor}]}>
-                        <View style={{width: 8, height: 8, borderRadius: 4, backgroundColor: "white", top: -1}}></View>
-                    </Image>
-                    <View style={styles.BMIAndBodyfatInfoView_icon_view}>
-                        <Text style={styles.BMIAndBodyfatInfoView_icon_text}>偏低</Text>
-                        <Text style={styles.BMIAndBodyfatInfoView_icon_text}>正常</Text>
-                        <Text style={styles.BMIAndBodyfatInfoView_icon_text}>偏高</Text>
+                        </Image>
+                        <Image source={require('../imgs/deepinReport_fat_indicator.png')}
+                               style={[styles.BMIAndBodyfatInfoView_icon_show, {left: bodyFatWidth}, {tintColor: bodyFatColor}]}>
+                            <View style={{
+                                width: 8,
+                                height: 8,
+                                borderRadius: 4,
+                                backgroundColor: "white",
+                                top: -1
+                            }}></View>
+                        </Image>
+                        <View style={styles.BMIAndBodyfatInfoView_icon_view}>
+                            <Text style={styles.BMIAndBodyfatInfoView_icon_text}>偏低</Text>
+                            <Text style={styles.BMIAndBodyfatInfoView_icon_text}>正常</Text>
+                            <Text style={styles.BMIAndBodyfatInfoView_icon_text}>偏高</Text>
+                        </View>
+
                     </View>
 
                 </View>
+            )
+        }else  {
+            var bmiWidth;
+            var bmiColor;
+            var bmiTitleW;
 
-            </View>
-        )
+            if (BMIindex === 0) {
+                bmiWidth = 16;
+                bmiTitleW = 5;
+                bmiColor = "#39BEE7";
+            } else if (BMIindex === 1) {
+                bmiWidth = 59;
+                bmiTitleW = 50;
+                bmiColor = '#AACC1D';
+            } else if (BMIindexgit  === 2) {
+                bmiWidth = 102;
+                bmiTitleW = 92;
+                bmiColor = "#F1C43C";
+            } else if (BMIindex === 3) {
+                bmiWidth = 146;
+                bmiTitleW = 136;
+                bmiColor = "#F6931E";
+            } else if (BMIindex === 4) {
+                bmiWidth = 189;
+                bmiTitleW = 179;
+                bmiColor = "#F74C3C";
+            } else if (BMIindex === 5) {
+                bmiWidth = 232;
+                bmiTitleW = 221;
+                bmiColor = "#AC2703";
+            }
+
+            var bodyFatWidth;
+            var bodyFatColor;
+            var bodyFatTitleW;
+            if (bodyfatIndex === 1) {
+                bodyFatWidth = 35;
+                bodyFatTitleW = 25;
+                bodyFatColor = "#A98CE9";
+            } else if (bodyfatIndex === 2) {
+                bodyFatWidth = 122;
+                bodyFatTitleW = 112;
+                bodyFatColor = '#AACC1D';
+            } else {
+                bodyFatWidth = 209;
+                bodyFatTitleW = 200;
+                bodyFatColor = "#F1C43C";
+            }
+
+            return (
+
+                <View style={{ alignItems: 'center'}}>
+
+                    <View style={styles.BMIAndBodyfatInfoView}>
+                        <View style={{
+                            width: 260,
+                            height: 18,
+                            backgroundColor: 'rgba(255, 255, 255, 0.0)',
+                            flexDirection: 'row',
+                        }}>
+                            <Text
+                                style={[styles.BMIAndBodyfatInfoView_title, {left: bmiTitleW}, {color: bmiColor}, {fontSize: 13}, {paddingTop: -2}]}>BMI</Text>
+                        </View>
+                        <View style={styles.BMIAndBodyfatInfoView_base}>
+
+                            <Image source={require('../imgs/deepinReport_fat_level_1.png')}
+                                   style={styles.BMIAndBodyfatInfoView_icon_line}>
+                            </Image>
+                            <Image source={require('../imgs/deepinReport_fat_indicator.png')}
+                                   style={[styles.BMIAndBodyfatInfoView_icon_show, {left: bmiWidth}, {tintColor: bmiColor}]}>
+                                <View style={{
+                                    width: 8,
+                                    height: 8,
+                                    borderRadius: 4,
+                                    backgroundColor: "white",
+                                    top: -1
+                                }}></View>
+
+                            </Image>
+                            <View style={styles.BMIAndBodyfatInfoView_icon_view}>
+                                <Text style={styles.BMIAndBodyfatInfoView_icon_text_1}>偏瘦</Text>
+                                <Text style={styles.BMIAndBodyfatInfoView_icon_text_1}>正常</Text>
+                                <Text style={styles.BMIAndBodyfatInfoView_icon_text_1}>超重</Text>
+                                <Text style={styles.BMIAndBodyfatInfoView_icon_text_1}>轻度肥胖</Text>
+                                <Text style={styles.BMIAndBodyfatInfoView_icon_text_1}>中度肥胖</Text>
+                                <Text style={styles.BMIAndBodyfatInfoView_icon_text_1}>重度肥胖</Text>
+                            </View>
+
+                        </View>
+
+                    </View>
+                    <View style={styles.BMIAndBodyfatInfoView}>
+                        <View style={{
+                            width: 260,
+                            height: 18,
+                            backgroundColor: 'rgba(255, 255, 255, 0.0)',
+                            flexDirection: 'row',
+                        }}>
+                            <Text
+                                style={[styles.BMIAndBodyfatInfoView_title, {color: bodyFatColor}, {left: bodyFatTitleW}]}>体脂肪</Text>
+                        </View>
+                        <View style={styles.BMIAndBodyfatInfoView_base}>
+
+                            <Image source={require('../imgs/deepinReport_fat_level.png')}
+                                   style={styles.BMIAndBodyfatInfoView_icon_line}>
+                            </Image>
+                            <Image source={require('../imgs/deepinReport_fat_indicator.png')}
+                                   style={[styles.BMIAndBodyfatInfoView_icon_show, {left: bodyFatWidth}, {tintColor: bodyFatColor}]}>
+                                <View style={{
+                                    width: 8,
+                                    height: 8,
+                                    borderRadius: 4,
+                                    backgroundColor: "white",
+                                    top: -1
+                                }}></View>
+                            </Image>
+                            <View style={styles.BMIAndBodyfatInfoView_icon_view}>
+                                <Text style={styles.BMIAndBodyfatInfoView_icon_text}>偏低</Text>
+                                <Text style={styles.BMIAndBodyfatInfoView_icon_text}>正常</Text>
+                                <Text style={styles.BMIAndBodyfatInfoView_icon_text}>偏高</Text>
+                            </View>
+
+                        </View>
+
+                    </View>
+                </View>
+            )
+        }
     }
 
     /*腰臀围类型 subview*/
@@ -490,15 +629,15 @@ export default class DeepinReportShared extends Component {
         var color;
         var title;
 
-        if (index == 1) {
+        if (index === 1) {
             color = "#A98CE9";
             title = "梨型";
             bodyIcon = require("../imgs/deepinReport_fat_hip_level_2.png");
-        } else if (index == 2) {
+        } else if (index === 2) {
             color = '#AACC1D';
             title = "正常";
             bodyIcon = require("../imgs/deepinReport_fat_hip_level_1.png");
-        } else if (index == 3) {
+        } else if (index === 3) {
             color = "#F1C43C";
             title = "苹果型";
             bodyIcon = require("../imgs/deepinReport_fat_hip_level_0.png");
@@ -523,7 +662,7 @@ export default class DeepinReportShared extends Component {
 
     renderWaistlineAndHipView(index) {
 
-        if (index == 0) {
+        if (index === 0) {
             return (
                 <View style={{flexDirection: "row", alignItems: 'center', top: 20}}>
                     <Text style={{
@@ -625,7 +764,7 @@ export default class DeepinReportShared extends Component {
     renderFattyLiverRiskSubview(title, index, indexType, bgColor) {
 
         var color;
-        if (index == indexType) {
+        if (index === indexType) {
             color = bgColor;
         } else {
 
@@ -767,7 +906,7 @@ export default class DeepinReportShared extends Component {
 
     /*尾部显示*/
     renderFooterView(){
-        if (this.props.shieldUserInfo == 1){
+        if (this.props.shieldUserInfo === 1){
             return (
                 <View style={{height:20}}/>
             )
@@ -782,6 +921,10 @@ export default class DeepinReportShared extends Component {
 
     /*绘制view*/
     render() {
+        var  fatInfoViewH = 180;
+        if(this.state.BMICustomSet === 1) {
+            fatInfoViewH = 225;
+        }
         return (
             <ScrollView showsVerticalScrollIndicator={false} style={{backgroundColor: '#F4F4F4'}}>
                 <View style={{backgroundColor: '#F4F4F4'}} onLayout={(e) => this.onLayout(e)}>
@@ -844,16 +987,16 @@ export default class DeepinReportShared extends Component {
 
                     {/*肥胖状况*/}
                     <View style={{
-                        height: 190,
+                        height: fatInfoViewH+10,
                         width: screenWidth,
                         backgroundColor: '#F4F4F4',
                     }}>
-                        <View style={styles.fatInfoView}>
+                        <View style={[styles.fatInfoView,{height:fatInfoViewH}]}>
                             {this.renderTitleView("肥胖状况")}
                             <View style={{flexDirection: "row", alignItems: 'center'}}>
                                 <View style={{width: 20, height: 90}}/>
                                 <View >
-                                    {this.renderBMIAndBodyfatInfoView(this.state.BMIType, this.state.bodyFatType)}
+                                    {this.renderBMIAndBodyfatInfoView(this.state.BMIType, this.state.bodyFatType, this.state.BMICustomSet)}
                                     {this.renderWaistlineAndHipView(this.state.hipType)}
                                 </View>
                             </View>
@@ -1187,7 +1330,6 @@ const styles = StyleSheet.create({
 
     /*肥胖状况*/
     fatInfoView: {
-        height: 180,
         width: screenWidth - 20,
         top: 10,
         left: 10,
@@ -1238,6 +1380,15 @@ const styles = StyleSheet.create({
         top: 3,
         textAlign: 'center',
         fontSize: 10,
+        color: "#999999",
+        paddingTop: 5,
+
+    },
+    BMIAndBodyfatInfoView_icon_text_1: {
+        width: 43.2,
+        top: 3,
+        textAlign: 'center',
+        fontSize: 8,
         color: "#999999",
         paddingTop: 5,
 

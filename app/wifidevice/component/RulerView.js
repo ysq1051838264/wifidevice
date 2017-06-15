@@ -6,7 +6,6 @@ import React, {Component, PropTypes} from 'react';
 import {
     StyleSheet,
     requireNativeComponent,
-    UIManager,
     View,
     Dimensions,
 } from 'react-native';
@@ -14,9 +13,11 @@ import {
 let SCREEN_WIDTH = Dimensions.get('window').width;//宽
 let SCREEN_HEIGHT = Dimensions.get('window').height;//高
 
-var RulerView = requireNativeComponent(`RulerViewManager`,Ruler,{
+var RulerView = requireNativeComponent(`RulerViewManager`, Ruler, {
     nativeOnly: {onChange: true}
 });
+
+var RCT_RULER_VIEW = 'RulerViewManager';
 
 class Ruler extends Component {
     constructor() {
@@ -24,20 +25,17 @@ class Ruler extends Component {
         this._onChange = this._onChange.bind(this);
     }
 
-    _onChange(event: Event) {
+    _onChange(event) {
         if (!this.props.onScrollChange) {
             return;
         }
         this.props.onScrollChange(event.nativeEvent.message)
     }
 
-    onSlide(){
-        UIManager.dispatchViewManagerCommand();
-    }
-
     render() {
         const {color} = this.props;
         return (<RulerView
+            ref={RCT_RULER_VIEW}
             style={styles.rulerStyle}
             onChange={this._onChange}
             color={color}
@@ -54,8 +52,11 @@ Ruler.propTypes = {
 
 const styles = StyleSheet.create({
     rulerStyle: {
-        height: SCREEN_HEIGHT / 2,
-        width: SCREEN_WIDTH
+        height: 120,
+        width: SCREEN_WIDTH,
+        marginTop: 20,
+        justifyContent: 'center',
+        alignItems: "center"
     }
 });
 

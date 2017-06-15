@@ -105,6 +105,7 @@ export default class WifiConfigSecond extends Component {
                 themeColor: this.state.themeColor,
                 wifiName: this.state.wifiName,
                 wifiPassword: this.state.wifiPassword,
+                isHasWeightFlag: this.props.isHasWeightFlag
             }
         });
     }

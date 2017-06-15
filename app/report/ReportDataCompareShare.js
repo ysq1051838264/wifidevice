@@ -15,7 +15,7 @@ import {
     Platform,
 } from 'react-native'
 
-const layoutWidth = 320;
+const layoutWidth = 340;
 const barHeight = 10;
 var ReportCorderView = require('./ReportCordeView');
 
@@ -39,7 +39,7 @@ export default class ReportDataCompareShare extends Component {
 
     loadData() {
         if (Platform.OS === 'ios') {
-            NativeModules.QNReport.fetchReportDataWithDataId(this.props.dataId + "").then(e => {
+            NativeModules.QNAnalysisCompareReportModule.fetchCompareReportData(this.props.dataId + "", this.props.compareDataId + "").then(e => {
                 this.setState({
                     user: e.user,
                     titleStatus: e.titleStatus,
@@ -73,7 +73,11 @@ export default class ReportDataCompareShare extends Component {
         const {width, height} =  e.nativeEvent.layout;
 
         if (height > 200) {
-            NativeModules.QNUI.onGetViewSize(width, height)
+            if (Platform.OS === 'ios') {
+                NativeModules.QNUI.onGetAnalysisCompareReport(width, height)
+            } else {
+                NativeModules.QNUI.onGetViewSize(width, height)
+            }
         }
     }
 
@@ -116,14 +120,14 @@ export default class ReportDataCompareShare extends Component {
         var bodyshapeView;
         var vsBodyshapeView;
         if (data.title === "体型") {
-            vsBodyshapeView = (<View style={{flexDirection: 'row-reverse', flex: 2, justifyContent: 'center'}}/>);
-            bodyshapeView = (<View style={{flexDirection: 'row-reverse', flex: 2, justifyContent: 'center'}}/>);
+            vsBodyshapeView =(<View style={{flexDirection: 'row-reverse', flex: 3, justifyContent: 'center'}}/>);
+            bodyshapeView =(<View style={{flexDirection: 'row-reverse', flex: 3, justifyContent: 'center'}}/>);
         } else {
-            vsBodyshapeView = (<View style={{flexDirection: 'row-reverse', flex: 2, justifyContent: 'center'}}>
+            vsBodyshapeView = (<View style={{flexDirection: 'row-reverse', flex: 3, justifyContent: 'center'}}>
                 <Text style={[styles.rsTypeStyle, {color: vsBgColor}, {borderColor: vsBgColor}]}>{data.vsRsType}</Text>
             </View>);
 
-            bodyshapeView = (<View style={{flexDirection: 'row-reverse', flex: 2}}>
+            bodyshapeView = (<View style={{flexDirection: 'row-reverse', flex: 3}}>
                 <Text style={[styles.rsTypeStyle, {color: bgColor}, {borderColor: bgColor}]}>{data.rsType}</Text>
             </View>);
         }
@@ -133,9 +137,9 @@ export default class ReportDataCompareShare extends Component {
                 <View style={{flexDirection: 'row', alignItems: 'center', height: 39, backgroundColor: 'white'}}>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                         {/*指标名称*/}
-                        <Text style={[styles.scaleTitleStyle, {flex: 3}]}>{data.title}</Text>
+                        <Text style={[styles.scaleTitleStyle, {flex: 4}]}>{data.title}</Text>
                         {/*指标数值*/}
-                        <View style={{flexDirection: 'row', flex: 2}}>
+                        <View style={{flexDirection: 'row', flex: 3}}>
                             <Text style={styles.scaleValueStyle}>{data.vsScaleValue}</Text>
                             <Text style={styles.saleUnitStyle}>{data.vsUnit}</Text>
                         </View>

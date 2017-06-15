@@ -43,6 +43,7 @@ export default class WifiSetting extends Component {
         };
         this.isDestrory = false
     }
+
     componentWillMount() {
         if (Platform.OS === 'android') {
             BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
@@ -79,8 +80,8 @@ export default class WifiSetting extends Component {
                     ssid: ssid
                 })
             }).catch(e => {
-                console.log("获取 ssid 出错", e);
-            });
+            console.log("获取 ssid 出错", e);
+        });
     }
 
     connectivityChange(status) {
@@ -98,7 +99,8 @@ export default class WifiSetting extends Component {
             params: {
                 themeColor: themeColor,
                 wifiName: ssid,
-                wifiPassword: password
+                wifiPassword: password,
+                isHasWeightFlag: this.props.isHasWeightFlag
             }
         });
     }
@@ -147,13 +149,13 @@ export default class WifiSetting extends Component {
                 </View>
 
                 <View style={styles.bottomBar}>
-                    <QNButton color={this.state.themeColor} title={"开始配网"} onPress={this.toWeight.bind(this)}/>
+                    <QNButton color={this.state.themeColor} title={"开始配网"} onPress={this.startConfig.bind(this)}/>
                 </View>
             </View>
         );
     }
 
-    toWeight(){
+    toWeight() {
         const {navigator} = this.props;
         navigator.push({
             component: EnterWeightView,

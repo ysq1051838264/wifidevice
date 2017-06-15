@@ -70,9 +70,15 @@ export default class MeasureActions {
         })
     }
 
+    static saveWeight(weight) {
+        return Api.doPost(path_save_base_weight, {
+            weight: weight,
+        })
+    }
+
     //用版本升级的接口测试网络的连通性
     static personalCenter() {
-        return Promise.race([Api.doGet(path_personal_center,{}), Api.timeout()]);
+        return Promise.race([Api.doGet(path_personal_center, {}), Api.timeout()]);
     }
 
 }
@@ -87,6 +93,9 @@ const path_delete_invalid_data = "/api/v5/measurements/delete_invalid_data.json"
 const path_assign_invalid_data = "/api/v5/measurements/assign_invalid_data.json";
 
 const path_occupy_measure = "/api/v5/devices/link.json";
+
+//保存体重
+const path_save_base_weight = "/api/v5/users/save_base_weight.json";
 
 //个人中心
 const path_personal_center = "/api/v5/beans/personal_center.json";
