@@ -150,7 +150,7 @@ export default class ReportDataCompareShare extends Component {
                         <Image source={require('../imgs/compare_report_item_arrow@3x.png')}/>
 
                         {/*指标数值*/}
-                        <View style={{flexDirection: 'row', flex: 2, marginLeft: 5}}>
+                        <View style={{flexDirection: 'row', flex: 3, marginLeft: 5}}>
                             <Text style={styles.scaleValueStyle}>{data.scaleValue}</Text>
                             <Text style={styles.saleUnitStyle}>{data.unit}</Text>
                         </View>

@@ -289,11 +289,11 @@ export default class DeepinReportShared extends Component {
 
         var color;
         var textStr;
-        if (index === 0 || index === 1) {//级别0  通常表示严重偏低  级别1  通常表示偏低
-            if (title === "基础代谢量") {
+        if (index == 0 || index == 1) {//级别0  通常表示严重偏低  级别1  通常表示偏低
+            if (title == "基础代谢量") {
                 textStr = "低";
                 color = "#A98CE9";
-            } else if (title === "身体年龄") {
+            } else if (title == "身体年龄") {
                 textStr = "高";
                 color = "#E74C3C";
 
@@ -302,11 +302,11 @@ export default class DeepinReportShared extends Component {
                 color = "#A98CE9";
             }
 
-        } else if (index === 2) {//级别2  通常表示正常
+        } else if (index == 2) {//级别2  通常表示正常
             textStr = "正常";
             color = '#AACC1D';
-        } else if (index === 3 || index == 4) {//级别3  通常表示偏高 //级别4  通常表示严重偏高
-            if (title === "蛋白质" || title === "无机盐" || title === "基础代谢量") {
+        } else if (index == 3 || index == 4) {//级别3  通常表示偏高 //级别4  通常表示严重偏高
+            if (title == "蛋白质" || title == "无机盐" || title == "基础代谢量") {
                 color = '#AACC1D';
                 textStr = "正常";
             } else {
@@ -332,7 +332,6 @@ export default class DeepinReportShared extends Component {
     /*BMR 状况View*/
     renderBMRInfoView(index) {
 
-        // index = 0;
         var color;
         var textStr;
         var show_Y;
@@ -506,7 +505,7 @@ export default class DeepinReportShared extends Component {
                 bmiWidth = 59;
                 bmiTitleW = 50;
                 bmiColor = '#AACC1D';
-            } else if (BMIindexgit  === 2) {
+            } else if (BMIindex  === 2) {
                 bmiWidth = 102;
                 bmiTitleW = 92;
                 bmiColor = "#F1C43C";
@@ -527,11 +526,11 @@ export default class DeepinReportShared extends Component {
             var bodyFatWidth;
             var bodyFatColor;
             var bodyFatTitleW;
-            if (bodyfatIndex === 1) {
+            if (bodyfatIndex == 1) {
                 bodyFatWidth = 35;
                 bodyFatTitleW = 25;
                 bodyFatColor = "#A98CE9";
-            } else if (bodyfatIndex === 2) {
+            } else if (bodyfatIndex == 2) {
                 bodyFatWidth = 122;
                 bodyFatTitleW = 112;
                 bodyFatColor = '#AACC1D';
@@ -629,15 +628,15 @@ export default class DeepinReportShared extends Component {
         var color;
         var title;
 
-        if (index === 1) {
+        if (index == 1) {
             color = "#A98CE9";
             title = "梨型";
             bodyIcon = require("../imgs/deepinReport_fat_hip_level_2.png");
-        } else if (index === 2) {
+        } else if (index == 2) {
             color = '#AACC1D';
             title = "正常";
             bodyIcon = require("../imgs/deepinReport_fat_hip_level_1.png");
-        } else if (index === 3) {
+        } else if (index == 3) {
             color = "#F1C43C";
             title = "苹果型";
             bodyIcon = require("../imgs/deepinReport_fat_hip_level_0.png");
@@ -662,7 +661,7 @@ export default class DeepinReportShared extends Component {
 
     renderWaistlineAndHipView(index) {
 
-        if (index === 0) {
+        if (index == 0) {
             return (
                 <View style={{flexDirection: "row", alignItems: 'center', top: 20}}>
                     <Text style={{

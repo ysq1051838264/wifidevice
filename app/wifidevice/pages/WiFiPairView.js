@@ -65,6 +65,7 @@ export default class WiFiPairView extends Component {
         if (Platform.OS === 'android') {
             BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
         }
+        this.stopConfig();
         console.log("移除了")
     }
 
@@ -77,7 +78,6 @@ export default class WiFiPairView extends Component {
         }
         return false;
     };
-
 
     startConfig() {
         const {wifiName, wifiPassword} = this.state;
@@ -102,10 +102,15 @@ export default class WiFiPairView extends Component {
                 }
 
                 //如果有体重，则进入检测界面，否则需要去设置体重
-                if (this.props.isHasWeightFlag)
+                if (this.props.isHasWeightFlag) {
                     this.bindDevice(device);
-                else
+                } else {
+                    this.setState({
+                        workState: Constant.STATE_GOT_MODEL,
+                    });
                     this.toEnterWeight(device);
+                }
+
             })
             .catch(e => {
                 console.log('配网失败', e);
@@ -131,22 +136,12 @@ export default class WiFiPairView extends Component {
         var contentView;
 
         switch (this.state.workState) {
-            case Constant.STATE_MODIFY_PASSWORD: {
-                contentView = (
-                    <View style={styles.container}>
-                        <ModalDialog
-                            dialogVisible={this.state.isDialogVisible}
-                            dialogLeftBtnAction={() => {
-                                this.dialogCancel()
-                            }}
-                            dialogRightBtnAction={(wifiPwd) => {
-                                this.dialogConfirm(wifiPwd)
-                            }}
-                        />
-                    </View>);
+            case Constant.STATE_GOT_MODEL: {
+                console.log('配网成功');
+                this.stopConfig();
+                contentView = null;
                 break;
             }
-
             case Constant.STATE_SETTING_WIFI: {
                 this.startConfig();
                 contentView = (
@@ -196,10 +191,6 @@ export default class WiFiPairView extends Component {
                                 }}
                                 dialogRightBtnAction={(wifiPwd) => {
                                     this.dialogConfirm(wifiPwd)
-                                }}
-
-                                setModalVisible={() => {
-                                    this.dialogCancel()
                                 }}
                             />
                             <View style={{justifyContent: 'center', alignItems: 'center',}}>
@@ -252,7 +243,6 @@ export default class WiFiPairView extends Component {
             wifiPassword: wifiPwd,
             workState: Constant.STATE_SETTING_WIFI,
         });
-        console.log("ysq", wifiPwd)
     }
 
     backOnPress() {

@@ -90,7 +90,6 @@ export default class WifiConfigFirst extends Component {
     }
 
     _next() {
-        console.log('进入wifi配网界面');
         const {navigator} = this.props;
         navigator.resetTo({
             component: WifiSetting,
