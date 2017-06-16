@@ -342,7 +342,8 @@ export default class UnMeasureData extends Component {
                     <ListView
                         dataSource={dataSource}
                         renderHeader={this._renderHeader.bind(this)}
-                        renderRow={this._renderRow.bind(this)}/>
+                        renderRow={this._renderRow.bind(this)}
+                        enableEmptySections={true}/>
                 </View>
 
                 <View style={styles.bottomButton}>
@@ -369,7 +370,8 @@ export default class UnMeasureData extends Component {
                 <View style={styles.container}>
                     <ListView
                         dataSource={dataSource}
-                        renderRow={this._renderRow.bind(this)}/>
+                        renderRow={this._renderRow.bind(this)}
+                        enableEmptySections={true}/>
                 </View>
             </View>);
         }

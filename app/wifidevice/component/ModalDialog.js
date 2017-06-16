@@ -11,7 +11,8 @@ import {
     TextInput,
     Platform,
     TouchableHighlight,
-    View
+    View,
+    ScrollView,
 } from 'react-native';
 
 let Dimensions = require('Dimensions');
@@ -54,6 +55,8 @@ export default  class ModalDialog extends Component {
                 onRequestClose={() => {
                 }}>
                 <View style={styles.bg}>
+                    <ScrollView ref="customScrollView">
+                        <View style={styles.spaceView}/>
                     <View style={styles.dialog}>
                         <View style={styles.dialogTitleView}>
                             <Text style={styles.dialogTitle}>
@@ -62,14 +65,15 @@ export default  class ModalDialog extends Component {
                         </View>
 
                         <View style={styles.dialogContentView}>
-                            <TextInput placeholder="请输入wifi密码" style={styles.dialogContent}
-                                       underlineColorAndroid='transparent'
-                                       defaultValue={this.props.dialogContent}
-                                       onChangeText={(text) => {
-                                           this.setState({wifiPassword: text})
-                                       }}/>
+                                <TextInput placeholder="请输入wifi密码" style={styles.dialogContent}
+                                           underlineColorAndroid='transparent'
+                                           defaultValue={this.props.dialogContent}
+                                           autoFocus= {true}
+                                           keyboardType = 'ascii-capable'
+                                           onChangeText={(text) => {
+                                             this.setState({wifiPassword: text})
+                                           }}/>
                         </View>
-
                         <View style={styles.dialogBtnView}>
                             <TouchableHighlight style={styles.dialogBtnLeftViewItem}
                                                 onPress={this.props.dialogLeftBtnAction}>
@@ -88,6 +92,7 @@ export default  class ModalDialog extends Component {
                             </TouchableHighlight>
                         </View>
                     </View>
+                    </ScrollView>
                 </View>
             </Modal>
         )
@@ -102,7 +107,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-
+  spaceView:{
+    height: SCREEN_HEIGHT * 0.2,
+  },
     dialog: {
         width: SCREEN_WIDTH * 0.8,
         height: SCREEN_HEIGHT * 0.28,
@@ -140,7 +147,8 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         fontSize: 16,
         color: '#4A4A4A',
-        marginLeft: 5
+        marginLeft: 5,
+        height : SCREEN_HEIGHT * 0.07
     },
 
     dialogBtnView: {

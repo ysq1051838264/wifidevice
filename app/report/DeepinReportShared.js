@@ -66,7 +66,7 @@ export default class DeepinReportShared extends Component {
 
     /*加载数据*/
     _loadData() {
-        if (Platform.OS === 'ios') {
+        if (Platform.OS == 'ios') {
             NativeModules.QNAnalysisDeepinReportModule.fetchDeepinReportDataWithDataDic(this.props.dataDic ).then(e => {
                 console.log('打印出来的：', e);
                 this.setState(e);
@@ -87,7 +87,7 @@ export default class DeepinReportShared extends Component {
     onLayout(e) {
         const {width, height} =  e.nativeEvent.layout;
         if (height > 350) {
-            if (Platform.OS === 'ios') {
+            if (Platform.OS == 'ios') {
                 NativeModules.QNUI.onGetAnalysisDeepinReport(width, height)
             } else {
                 NativeModules.QNUI.onGetViewSize(width, height)
@@ -109,20 +109,20 @@ export default class DeepinReportShared extends Component {
     /*体重信息subview*/
     renderUserInfoView() {
 
-        if (this.props.shieldUserInfo === 1){
+        if (this.props.shieldUserInfo == 1){
             return (
                 <View style={{height:1}}/>
             )
         }else  {
             /*处理用户头像*/
             const avatarUrl = this.state.user.avatar;
-            if (avatarUrl === "") {
-                var icon = this.state.user.gender === 1 ? require("../imgs/avatar_man.png") : require("../imgs/avatar_man.png");
+            if (avatarUrl == "") {
+                var icon = this.state.user.gender == 1 ? require("../imgs/avatar_man.png") : require("../imgs/avatar_man.png");
             }
             return (
                 <View style={styles.userInfoView}>
                     <Image source={require('../imgs/report_head.png')} style={styles.userInfoView_baseImage}>
-                        <Image source={(avatarUrl === "" ? icon : {uri: avatarUrl}) }
+                        <Image source={(avatarUrl == "" ? icon : {uri: avatarUrl}) }
                                style={styles.userInfoView_userIcon}/>
                         <View style={ styles.userInfoView_baseTextView}>
                             <Text style={styles.userInfoView_userNameText}>{this.state.user.username}</Text>
@@ -145,7 +145,7 @@ export default class DeepinReportShared extends Component {
 
         var unit;
         var font;
-        if (title === "体重") {
+        if (title == "体重") {
             unit = this.state.weightUnit;
             font = 11;
         } else {
@@ -173,7 +173,7 @@ export default class DeepinReportShared extends Component {
 
         var showStr;
         var unitStr;
-        if (text === '无需控制') {
+        if (text == '无需控制') {
 
             showStr = "";
             unitStr ="";
@@ -239,10 +239,10 @@ export default class DeepinReportShared extends Component {
     /*肌肉控制subview*/
     renderMuscleControlSubview(text) {
         var icon;
-        if (text === "肌肉比率低") {
+        if (text == "肌肉比率低") {
             icon = require('../imgs/deepinReport_muscle_status_0.png');
 
-        } else if (text === "肌肉比率标准") {
+        } else if (text == "肌肉比率标准") {
             icon = require('../imgs/deepinReport_muscle_status_1.png');
         } else {
             icon = require('../imgs/deepinReport_muscle_status_2.png');
@@ -336,17 +336,17 @@ export default class DeepinReportShared extends Component {
         var textStr;
         var show_Y;
         var index_Y;
-        if (index === 0 || index === 1) {//级别0  通常表示严重偏低  级别1  通常表示偏低
+        if (index == 0 || index == 1) {//级别0  通常表示严重偏低  级别1  通常表示偏低
             textStr = "低";
             color = "#A98CE9";
             show_Y = 62;
             index_Y = 57;
-        } else if (index === 2) {//级别2  通常表示正常
+        } else if (index == 2) {//级别2  通常表示正常
             textStr = "正常";
             color = '#AACC1D';
             show_Y = 45;
             index_Y = 40;
-        } else if (index === 3 || index === 4) {//级别3  通常表示偏高 //级别4  通常表示严重偏高
+        } else if (index == 3 || index == 4) {//级别3  通常表示偏高 //级别4  通常表示严重偏高
             color = '#AACC1D';
             textStr = "正常";
             show_Y = 45;
@@ -373,7 +373,7 @@ export default class DeepinReportShared extends Component {
         var color;
         var textStr;
         var index_Y;
-        if (index === 0 || index === 1) {
+        if (index == 0 || index == 1) {
             textStr = "高";
             color = "#E74C3C";
             index_Y = 12;
@@ -399,16 +399,16 @@ export default class DeepinReportShared extends Component {
     /*肥胖状况 subView*/
     renderBMIAndBodyfatInfoView(BMIindex, bodyfatIndex,setType) {
 
-        if (setType === 0) {
+        if (setType == 0) {
             var bmiWidth;
             var bmiColor;
             var bmiTitleW;
 
-            if (BMIindex === 0) {
+            if (BMIindex == 0) {
                 bmiWidth = 35;
                 bmiTitleW = 35;
                 bmiColor = "#A98CE9";
-            } else if (BMIindex === 1) {
+            } else if (BMIindex == 1) {
                 bmiWidth = 122;
                 bmiTitleW = 122;
                 bmiColor = '#AACC1D';
@@ -421,11 +421,11 @@ export default class DeepinReportShared extends Component {
             var bodyFatWidth;
             var bodyFatColor;
             var bodyFatTitleW;
-            if (bodyfatIndex === 1) {
+            if (bodyfatIndex == 1) {
                 bodyFatWidth = 35;
                 bodyFatTitleW = 35;
                 bodyFatColor = "#A98CE9";
-            } else if (bodyfatIndex === 2) {
+            } else if (bodyfatIndex == 2) {
                 bodyFatWidth = 122;
                 bodyFatTitleW = 122;
                 bodyFatColor = '#AACC1D';
@@ -434,7 +434,7 @@ export default class DeepinReportShared extends Component {
                 bodyFatTitleW = 209;
                 bodyFatColor = "#F1C43C";
             }
-            if (bodyFatWidth === bmiWidth) {
+            if (bodyFatWidth == bmiWidth) {
                 bmiTitleW = bmiWidth - 25;
                 bodyFatTitleW = bodyFatWidth - 25;
             } else {
@@ -497,27 +497,27 @@ export default class DeepinReportShared extends Component {
             var bmiColor;
             var bmiTitleW;
 
-            if (BMIindex === 0) {
+            if (BMIindex == 0) {
                 bmiWidth = 16;
                 bmiTitleW = 5;
                 bmiColor = "#39BEE7";
-            } else if (BMIindex === 1) {
+            } else if (BMIindex == 1) {
                 bmiWidth = 59;
                 bmiTitleW = 50;
                 bmiColor = '#AACC1D';
-            } else if (BMIindex  === 2) {
+            } else if (BMIindex  == 2) {
                 bmiWidth = 102;
                 bmiTitleW = 92;
                 bmiColor = "#F1C43C";
-            } else if (BMIindex === 3) {
+            } else if (BMIindex == 3) {
                 bmiWidth = 146;
                 bmiTitleW = 136;
                 bmiColor = "#F6931E";
-            } else if (BMIindex === 4) {
+            } else if (BMIindex == 4) {
                 bmiWidth = 189;
                 bmiTitleW = 179;
                 bmiColor = "#F74C3C";
-            } else if (BMIindex === 5) {
+            } else if (BMIindex == 5) {
                 bmiWidth = 232;
                 bmiTitleW = 221;
                 bmiColor = "#AC2703";
@@ -763,7 +763,7 @@ export default class DeepinReportShared extends Component {
     renderFattyLiverRiskSubview(title, index, indexType, bgColor) {
 
         var color;
-        if (index === indexType) {
+        if (index == indexType) {
             color = bgColor;
         } else {
 
@@ -905,7 +905,7 @@ export default class DeepinReportShared extends Component {
 
     /*尾部显示*/
     renderFooterView(){
-        if (this.props.shieldUserInfo === 1){
+        if (this.props.shieldUserInfo == 1){
             return (
                 <View style={{height:20}}/>
             )
@@ -921,7 +921,7 @@ export default class DeepinReportShared extends Component {
     /*绘制view*/
     render() {
         var  fatInfoViewH = 180;
-        if(this.state.BMICustomSet === 1) {
+        if(this.state.BMICustomSet == 1) {
             fatInfoViewH = 225;
         }
         return (
