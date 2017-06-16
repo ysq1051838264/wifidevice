@@ -123,7 +123,7 @@ export default class EnterWeightView extends Component {
                     <Text style={{fontSize: 18, color: 'black'}}>还差最后一步</Text>
                 </View>
                 <View style={styles.contentContainer}>
-                    <Text style={{fontSize: 16, marginTop: 10, color: 'black'}}>体重</Text>
+                    <Text style={{fontSize: 16,color: 'black'}}>体重</Text>
                     {ruler}
                 </View>
                 <View style={styles.bottomBar}>
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     },
     rulerView: {
         width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height / 2,
+        height: Dimensions.get('window').height,
         marginTop: 20
     }
 });

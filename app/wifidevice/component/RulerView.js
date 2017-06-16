@@ -52,7 +52,7 @@ Ruler.propTypes = {
 
 const styles = StyleSheet.create({
     rulerStyle: {
-        height: 120,
+        height: SCREEN_HEIGHT / 2,
         width: SCREEN_WIDTH,
         marginTop: 20,
         justifyContent: 'center',
