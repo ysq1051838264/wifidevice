@@ -23,6 +23,7 @@ import {
 
 import NavigationBar from '../component/NavigationBar';
 import QNButton from '../component/QNButton';
+import UserInfo from '../utils/UserInfo';
 import ModalDialog from '../component/ModalDialog';
 import EnterWeightView from './EnterWeightView';
 import Spinner from 'react-native-spinkit';
@@ -48,10 +49,16 @@ export default class WiFiPairView extends Component {
     }
 
     componentWillMount() {
+        let wifi;
+        if (UserInfo.getWifiPwd() != "")
+            wifi = UserInfo.getWifiPwd();
+        else
+            wifi = this.props.wifiPassword;
+
         this.setState({
             themeColor: this.props.themeColor,
             wifiName: this.props.wifiName,
-            wifiPassword: this.props.wifiPassword,
+            wifiPassword: wifi,
         });
     }
 
@@ -162,8 +169,11 @@ export default class WiFiPairView extends Component {
 
                             <Text style={styles.topText}>正在将WiFi秤接入网络</Text>
                             <Text style={styles.tipText}>当前网络: {this.state.wifiName}</Text>
-                            <TouchableHighlight style={[styles.btn, {borderColor: this.state.themeColor}]}
-                                                onPress={this.showDialog.bind(this)}>
+                            <TouchableHighlight
+                                underlayColor='white'
+                                activeOpacity={0.1}
+                                style={[styles.btn, {borderColor: this.state.themeColor}]}
+                                onPress={this.showDialog.bind(this)}>
                                 <Text style={[styles.btnText, {color: this.state.themeColor}]}>重新输入Wi-Fi密码</Text>
                             </TouchableHighlight>
                             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -197,6 +207,8 @@ export default class WiFiPairView extends Component {
                                 <Text style={styles.topText}>配网失败</Text>
                                 <Text style={styles.tipText}>当前网络: {this.state.wifiName}</Text>
                                 <TouchableHighlight
+                                    underlayColor='white'
+                                    activeOpacity={0.1}
                                     style={[styles.btn, {borderColor: this.state.themeColor, alignItems: 'center'}]}
                                     onPress={this.showDialog.bind(this)}>
                                     <Text style={[styles.btnText, {color: this.state.themeColor}]}>重新输入Wi-Fi密码</Text>
@@ -238,6 +250,7 @@ export default class WiFiPairView extends Component {
     }
 
     dialogConfirm(wifiPwd) {
+        UserInfo.saveWifiPwd(wifiPwd);
         this.setState({
             isDialogVisible: false,
             wifiPassword: wifiPwd,
@@ -268,7 +281,7 @@ export default class WiFiPairView extends Component {
             .then((device) => {
                 Platform.OS === 'android' ? ToastAndroid.show("绑定成功，请上秤", ToastAndroid.SHORT) : AlertIOS.alert("绑定成功，请上秤");
                 if (Platform.OS === 'android') {
-                    NativeModules.AynsMeasureModule.toMeasureView(scale_name, internal_model, mac, scale_type+"", device_type+"");
+                    NativeModules.AynsMeasureModule.toMeasureView(scale_name, internal_model, mac, scale_type + "", device_type + "");
                 } else {
                     NativeModules.QNUI.popTwoViewController();
                 }

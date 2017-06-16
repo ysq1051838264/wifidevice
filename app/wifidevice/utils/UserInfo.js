@@ -4,11 +4,19 @@
 
 
 var userId = "";
+var wifiPwd = "";
 
 var UserInfo = {
+    saveWifiPwd(wifi){
+        wifiPwd = wifi;
+    },
+
+    getWifiPwd(){
+        return wifiPwd;
+    },
 
     saveUserId(data){
-       userId = data.userId;
+        userId = data.userId;
     },
 
     getUserId(){
