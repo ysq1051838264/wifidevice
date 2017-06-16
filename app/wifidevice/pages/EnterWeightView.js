@@ -30,6 +30,8 @@ import QNButton from '../component/QNButton';
 import MeasureHttpClient from "../http/MeasureHttpClient";
 
 var RulerView = require('../component/RulerView');
+var IOSRulerView = require('../component/IOSRulerView');
+
 
 var currentWeight = 60;
 
@@ -105,8 +107,13 @@ export default class EnterWeightView extends Component {
                            color={themeColor}
                            onScrollChange={(event) => this.onWebViewScroll(event)}></RulerView>);
         } else {
-
-
+            ruler = (
+                <View>
+                    <IOSRulerView style={styles.rulerView} onChange={(event) => this.onWebViewScroll(event)}/>
+                    <RulerView style={styles.rulerView}
+                               color={themeColor}
+                               onScrollChange={(event) => this.onWebViewScroll(event)}></RulerView>
+                </View>);
         }
 
         return (

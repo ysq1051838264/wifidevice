@@ -18,11 +18,10 @@ var session_key = "";
 
 var Api = {
     config: {
-        api: 'api.sit.yolanda.hk',
+        api: 'api.yolanda.hk',
         // api: '192.168.1.37:3002',
         // app 版本号
         version: 1.1,
-
         debug: 1,
     },
 
