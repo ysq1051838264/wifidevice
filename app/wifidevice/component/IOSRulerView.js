@@ -3,28 +3,37 @@
  */
 //
 
-import React, { Component, PropTypes } from 'react';
-import { requireNativeComponent } from 'react-native';
+import React, {Component, PropTypes} from 'react';
+import {
+  StyleSheet,
+  requireNativeComponent,
+  View,
+  Dimensions,
+} from 'react-native';
 
-var IOSRulerView = requireNativeComponent('RNWeightInput', RNWeightInput);
 
-export default class RNWeightInput extends Component {
-
-  render() {
-    return <IOSRulerView {...this.props} />;
+class IOSRulerView extends React.Component {
+  constructor() {
+    super();
+    this._onChange = this._onChange.bind(this);
   }
-
+  _onChange(event) {
+    if (!this.props.onChange) {
+      return;
+    }
+    this.props.onChange(event.nativeEvent.weight);
+  }
+  render() {
+    return <RCTIOSRulerView {...this.props} onChange={this._onChange} />;
+  }
 }
 
 IOSRulerView.propTypes = {
   onChange: React.PropTypes.func,
 };
 
+var RCTIOSRulerView = requireNativeComponent('RNWeightInput', IOSRulerView,{
+  nativeOnly: { onChange: true }
+});
+
 module.exports = IOSRulerView;
-
-
-// var { requireNativeComponent } = require('react-native');
-//
-//
-// module.exports = requireNativeComponent('RNWeightInput', null);
-

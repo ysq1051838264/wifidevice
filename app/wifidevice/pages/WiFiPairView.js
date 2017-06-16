@@ -268,7 +268,7 @@ export default class WiFiPairView extends Component {
             .then((device) => {
                 Platform.OS === 'android' ? ToastAndroid.show("绑定成功，请上秤", ToastAndroid.SHORT) : AlertIOS.alert("绑定成功，请上秤");
                 if (Platform.OS === 'android') {
-                    NativeModules.AynsMeasureModule.toMeasureView();
+                    NativeModules.AynsMeasureModule.toMeasureView(scale_name, internal_model, mac, scale_type+"", device_type+"");
                 } else {
                     NativeModules.QNUI.popTwoViewController();
                 }

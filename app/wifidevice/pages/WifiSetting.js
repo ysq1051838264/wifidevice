@@ -28,6 +28,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import QNButton from '../component/QNButton';
 import NavigationBar from '../component/NavigationBar';
 import WifiConfigSecond from './WifiConfigSecond';
+import EnterWeightView from './EnterWeightView';
 
 var {SmartLinker, QNDeviceInfo} = NativeModules;
 
@@ -148,10 +149,21 @@ export default class WifiSetting extends Component {
                 </View>
 
                 <View style={styles.bottomBar}>
-                    <QNButton color={this.state.themeColor} title={"开始配网"} onPress={this.startConfig.bind(this)}/>
+                    <QNButton color={this.state.themeColor} title={"开始配网"} onPress={this.toEnterWeight.bind(this)}/>
                 </View>
             </View>
         );
+    }
+
+    toEnterWeight() {
+        const {navigator} = this.props;
+        navigator.push({
+            component: EnterWeightView,
+            name: 'enter_weight',
+            params: {
+                themeColor: this.state.themeColor,
+            }
+        });
     }
 }
 

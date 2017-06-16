@@ -47,6 +47,7 @@ export default class EnterWeightView extends Component {
         if (Platform.OS === 'android') {
             BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
         }
+
         this.setState({
             themeColor: this.props.themeColor,
         });
@@ -83,10 +84,10 @@ export default class EnterWeightView extends Component {
         MeasureHttpClient.bindDevice(scale_name, internal_model, mac, scale_type, device_type)
             .then((device) => {
                 MeasureHttpClient.saveWeight(currentWeight).then(() => {
-                    console.log("保存体重，获取到了数据：");
+                    console.log("保存体重，获取到了数据：" + scale_name + " " + internal_model + " " + mac + " " + scale_type + " " + device_type);
                     Platform.OS === 'android' ? ToastAndroid.show("绑定成功，请上秤", ToastAndroid.SHORT) : AlertIOS.alert("绑定成功，请上秤");
                     if (Platform.OS === 'android') {
-                        NativeModules.AynsMeasureModule.toMeasureView();
+                        NativeModules.AynsMeasureModule.toMeasureView(scale_name, internal_model, mac, scale_type+"", device_type+"");
                     } else {
                         NativeModules.QNUI.popTwoViewController();
                     }
@@ -98,7 +99,9 @@ export default class EnterWeightView extends Component {
     }
 
     render() {
-        const {themeColor} = this.state.themeColor;
+        const themeColor = this.props.themeColor;
+
+        console.log("ysq",this.props.themeColor);
 
         var ruler;
         if (Platform.OS === 'android') {
@@ -107,13 +110,7 @@ export default class EnterWeightView extends Component {
                            color={themeColor}
                            onScrollChange={(event) => this.onWebViewScroll(event)}></RulerView>);
         } else {
-            ruler = (
-                <View>
-                    <IOSRulerView style={styles.rulerView} onChange={(event) => this.onWebViewScroll(event)}/>
-                    <RulerView style={styles.rulerView}
-                               color={themeColor}
-                               onScrollChange={(event) => this.onWebViewScroll(event)}></RulerView>
-                </View>);
+          ruler = (<IOSRulerView style={styles.rulerView} onChange={(event) => this.onWebViewScroll(event)}></IOSRulerView>)
         }
 
         return (
@@ -123,11 +120,11 @@ export default class EnterWeightView extends Component {
                     <Text style={{fontSize: 18, color: 'black'}}>还差最后一步</Text>
                 </View>
                 <View style={styles.contentContainer}>
-                    <Text style={{fontSize: 16,color: 'black'}}>体重</Text>
+                    <Text style={{fontSize: 16, marginTop: 10, color: 'black'}}>体重</Text>
                     {ruler}
                 </View>
                 <View style={styles.bottomBar}>
-                    <QNButton color={this.state.themeColor} title="测量完成" onPress={this.checkData.bind(this)}/>
+                    <QNButton color={this.state.themeColor} title="确认" onPress={this.checkData.bind(this)}/>
                 </View>
             </View>
         );

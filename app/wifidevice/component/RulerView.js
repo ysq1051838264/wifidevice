@@ -17,8 +17,6 @@ var RulerView = requireNativeComponent(`RulerViewManager`, Ruler, {
     nativeOnly: {onChange: true}
 });
 
-var RCT_RULER_VIEW = 'RulerViewManager';
-
 class Ruler extends Component {
     constructor() {
         super();
@@ -35,7 +33,7 @@ class Ruler extends Component {
     render() {
         const {color} = this.props;
         return (<RulerView
-            ref={RCT_RULER_VIEW}
+            {...this.props}
             style={styles.rulerStyle}
             onChange={this._onChange}
             color={color}
@@ -44,8 +42,7 @@ class Ruler extends Component {
 }
 
 Ruler.propTypes = {
-    color: PropTypes.number,
-    text: PropTypes.string,
+    color: PropTypes.string,
     onChangeMessage: React.PropTypes.func,
     ...View.propTypes,
 };
