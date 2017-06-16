@@ -25,7 +25,7 @@ var ReportCorderView = React.createClass({
             console.log('进入');
             return (<Image source={require('../imgs/report_bottom_bg.png')} style={styles.bottomBgView}>
                 <View style={styles.bottombgContainer}>
-                    <Image source={require('../imgs/qr_code_tmall.png')}
+                    <Image source={require('../imgs/qr_code_tmall@3x.png')}
                            style={{marginLeft: 20}}>
                     </Image>
                     <View style={styles.bottomTextContainer}>

@@ -95,17 +95,17 @@ export default class ReportDataCompareShare extends Component {
             color = '#53A505'
         } else if (target === "不达标") {
             color = '#FFC028'
-        } else if (target ==="重度肥胖") {
+        } else if (target === "重度肥胖") {
             color = '#AC271E'
-        } else if (target ==="中度肥胖") {
+        } else if (target === "中度肥胖") {
             color = '#E74C3C'
-        } else if (target ==="轻度肥胖") {
+        } else if (target === "轻度肥胖") {
             color = '#F7931E'
-        } else if (target ==="超重"){
+        } else if (target === "超重") {
             color = '#FFC028'
-        } else if (target ==="肥胖") {
+        } else if (target === "肥胖") {
             color = '#FFC028'
-        } else if (target ==="正常") {
+        } else if (target === "正常") {
             color = '#AACC1D'
         } else {
             color = '#AACC1D'
@@ -113,22 +113,47 @@ export default class ReportDataCompareShare extends Component {
         return color
     }
 
+
+    static getStatusName(name) {
+        var targetName = name;
+        console.log("ysq", name)
+        if (name === "内脏脂肪等级") {
+            targetName = "内脏脂肪"
+        } else if (name === "基础代谢率") {
+            targetName = "基础代谢"
+        } else if (name === "皮下脂肪率") {
+            targetName = "皮下脂肪"
+        } else {
+            targetName = name;
+        }
+        return targetName;
+    }
+
     renderItem(data) {
         let vsBgColor = ReportDataCompareShare.getStatusColor(data.vsRsType);
         let bgColor = ReportDataCompareShare.getStatusColor(data.rsType);
 
+        let title = ReportDataCompareShare.getStatusName(data.title);
+
         var bodyshapeView;
         var vsBodyshapeView;
+
+        var flexScale = 2;
+
         if (data.title === "体型") {
-            vsBodyshapeView =(<View style={{flexDirection: 'row-reverse', flex: 3, justifyContent: 'center'}}/>);
-            bodyshapeView =(<View style={{flexDirection: 'row-reverse', flex: 3, justifyContent: 'center'}}/>);
+            vsBodyshapeView = null;
+            bodyshapeView = null;
+            flexScale = 4;
         } else {
-            vsBodyshapeView = (<View style={{flexDirection: 'row-reverse', flex: 3, justifyContent: 'center'}}>
+            flexScale = 2;
+            vsBodyshapeView = (<View style={{flexDirection: 'row-reverse', flex: 2, justifyContent: 'center'}}>
                 <Text style={[styles.rsTypeStyle, {color: vsBgColor}, {borderColor: vsBgColor}]}>{data.vsRsType}</Text>
             </View>);
 
-            bodyshapeView = (<View style={{flexDirection: 'row-reverse', flex: 3}}>
-                <Text style={[styles.rsTypeStyle, {color: bgColor}, {borderColor: bgColor}]}>{data.rsType}</Text>
+            bodyshapeView = (<View style={{flex: 2, flexDirection: 'row'}}>
+                <View style={{alignItems: 'center', justifyContent: 'center',}}>
+                    <Text style={[styles.rsTypeStyle, {color: bgColor}, {borderColor: bgColor}]}>{data.rsType}</Text>
+                </View>
             </View>);
         }
 
@@ -137,26 +162,26 @@ export default class ReportDataCompareShare extends Component {
                 <View style={{flexDirection: 'row', alignItems: 'center', height: 39, backgroundColor: 'white'}}>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                         {/*指标名称*/}
-                        <Text style={[styles.scaleTitleStyle, {flex: 4}]}>{data.title}</Text>
+                        <Text style={[styles.scaleTitleStyle, {flex: 2}]}>{title}</Text>
                         {/*指标数值*/}
-                        <View style={{flexDirection: 'row', flex: 3}}>
+                        <View style={{flexDirection: 'row', flex: flexScale}}>
                             <Text style={styles.scaleValueStyle}>{data.vsScaleValue}</Text>
                             <Text style={styles.saleUnitStyle}>{data.vsUnit}</Text>
                         </View>
                         {/*指标的判断*/}
-
                         {vsBodyshapeView}
 
                         <Image source={require('../imgs/compare_report_item_arrow@3x.png')}/>
 
                         {/*指标数值*/}
-                        <View style={{flexDirection: 'row', flex: 3, marginLeft: 5}}>
+                        <View style={{flexDirection: 'row', flex: flexScale, marginLeft: 10}}>
                             <Text style={styles.scaleValueStyle}>{data.scaleValue}</Text>
                             <Text style={styles.saleUnitStyle}>{data.unit}</Text>
                         </View>
                         {bodyshapeView}
                     </View>
                 </View>
+                <View style={{marginLeft: 5, marginRight: 5, backgroundColor: 'rgb(230, 230, 230)', height: 1}}></View>
             </View>
         )
     }
@@ -229,13 +254,16 @@ export default class ReportDataCompareShare extends Component {
                     </View>
                 </View>
 
-                <ListView
-                    dataSource={this.state.dataSource}
-                    renderRow={this.renderItem}
-                    bounces={false}
-                    showsVerticalScrollIndicator={false}
-                    renderFooter={() => this.renderFoot(this.state.showCode)}/>
+                <View style={{marginLeft: 20, marginRight: 12, borderRadius: 40, marginTop: 10}}>
+                    <ListView
+                        dataSource={this.state.dataSource}
+                        renderRow={this.renderItem}
+                        bounces={false}
+                        showsVerticalScrollIndicator={false}
+                        renderFooter={() => this.renderFoot(this.state.showCode)}/>
+                </View>
             </View>
+
         </ScrollView>);
     }
 
@@ -250,7 +278,7 @@ export default class ReportDataCompareShare extends Component {
 var styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F5FCFF',
+        backgroundColor: 'white',
         alignSelf: 'center',
         width: layoutWidth,
     },
@@ -288,7 +316,7 @@ var styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         marginTop: 12,
-        fontSize: 16
+        fontSize: 17
     },
 
     compareInclude: {
@@ -307,7 +335,7 @@ var styles = StyleSheet.create({
     compareTitleContext: {
         alignItems: 'center',
         justifyContent: 'center',
-        color: '#333',
+        color: '#4D4D4D',
         fontSize: 18,
         fontWeight: 'bold',
     },
@@ -322,29 +350,30 @@ var styles = StyleSheet.create({
         borderStyle: 'solid',
         backgroundColor: '#68D5F3',
         alignItems: 'center',
-        width: 250,
-        padding: 10,
-        flexDirection: 'row'
+        width: 260,
+        padding: 7,
+        flexDirection: 'row',
+        justifyContent: 'center'
     },
 
-
     scaleTitleStyle: {
-        color: '#333333',
+        color: '#808080',
         fontSize: 12,
         marginLeft: 10
     },
 
     scaleValueStyle: {
         fontSize: 14,
-        color: '#333333'
-
+        color: '#333333',
+        borderStyle: 'solid',
     },
+
     saleUnitStyle: {
         fontSize: 8,
         marginTop: 8,
         color: '#333333'
-
     },
+
     rsTypeStyle: {
         borderRadius: 9,
         borderWidth: 1,

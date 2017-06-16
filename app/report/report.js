@@ -425,7 +425,7 @@ export default class ReportActivity extends Component {
             },
             bottomBuyText: {
                 color: "white",
-                fontSize: 9,
+                fontSize: 7,
                 backgroundColor: 'transparent',
             },
         });
