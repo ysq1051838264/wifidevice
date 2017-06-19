@@ -73,7 +73,7 @@ export default class WiFiPairView extends Component {
             BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
         }
         this.stopConfig();
-        console.log("移除了")
+      console.log("移除了")
     }
 
     onBackAndroid = () => {
@@ -279,11 +279,13 @@ export default class WiFiPairView extends Component {
 
         MeasureHttpClient.bindDevice(scale_name, internal_model, mac, scale_type, device_type)
             .then((device) => {
-                Platform.OS === 'android' ? ToastAndroid.show("绑定成功，请上秤", ToastAndroid.SHORT) : AlertIOS.alert("绑定成功，请上秤");
+                Platform.OS === 'android' ? ToastAndroid.show("绑定成功，请上秤", ToastAndroid.SHORT) : AlertIOS.alert(
+                  '',
+                  '绑定成功，请上秤',
+                  [{text: '好', onPress:()=> NativeModules.QNUI.popTwoViewController()},]
+                );
                 if (Platform.OS === 'android') {
                     NativeModules.AynsMeasureModule.toMeasureView(scale_name, internal_model, mac, scale_type + "", device_type + "");
-                } else {
-                    NativeModules.QNUI.popTwoViewController();
                 }
             })
             .catch(e => {
@@ -295,9 +297,9 @@ export default class WiFiPairView extends Component {
             })
     }
 
-    stopConfig() {
-        SmartLinker.stopSetWifi()
-    }
+  stopConfig() {
+    SmartLinker.stopSetWifi()
+  }
 
     connectivityChange(status) {
         console.log("监听网络状态:", status);
@@ -353,12 +355,14 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderStyle: 'solid',
         borderRadius: 20,
+        justifyContent: 'center',
     },
 
     btnText: {
-        height: 32,
         fontSize: 16,
         textAlignVertical: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 
     topText: {

@@ -40,7 +40,8 @@ export default class EnterWeightView extends Component {
         super(props)
         this.state = {
             themeColor: null,
-        }
+        };
+        this.isDestrory = false
     }
 
     componentWillMount() {
@@ -54,6 +55,7 @@ export default class EnterWeightView extends Component {
     }
 
     componentWillUnMount() {
+        this.isDestrory = true;
         if (Platform.OS === 'android') {
             BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
         }
@@ -81,27 +83,30 @@ export default class EnterWeightView extends Component {
     checkData() {
         const {scale_name, internal_model, mac, scale_type, device_type} = this.props.data;
 
-        MeasureHttpClient.bindDevice(scale_name, internal_model, mac, scale_type, device_type)
-            .then((device) => {
-                MeasureHttpClient.saveWeight(currentWeight).then(() => {
-                    console.log("保存体重，获取到了数据：" + scale_name + " " + internal_model + " " + mac + " " + scale_type + " " + device_type);
-                    Platform.OS === 'android' ? ToastAndroid.show("绑定成功，请上秤", ToastAndroid.SHORT) : AlertIOS.alert("绑定成功，请上秤");
-                    if (Platform.OS === 'android') {
-                        NativeModules.AynsMeasureModule.toMeasureView(scale_name, internal_model, mac, scale_type+"", device_type+"");
-                    } else {
-                        NativeModules.QNUI.popTwoViewController();
-                    }
-                })
-            }).catch(e => {
-            Platform.OS === 'android' ? ToastAndroid.show("绑定失败，请重试", ToastAndroid.SHORT) : AlertIOS.alert("绑定失败，请重试");
-        });
+        if (!this.isDestrory)
+            MeasureHttpClient.bindDevice(scale_name, internal_model, mac, scale_type, device_type)
+                .then((device) => {
+                    MeasureHttpClient.saveWeight(currentWeight).then(() => {
+                        console.log("保存体重，获取到了数据：" + scale_name + " " + internal_model + " " + mac + " " + scale_type + " " + device_type);
+                        Platform.OS === 'android' ? ToastAndroid.show("绑定成功，请上秤", ToastAndroid.SHORT) : AlertIOS.alert(
+                                '',
+                                '绑定成功，请上秤',
+                                [{text: '好', onPress: () => NativeModules.QNUI.popTwoViewController()},]
+                            );
+                        if (Platform.OS === 'android') {
+                            NativeModules.AynsMeasureModule.toMeasureView(scale_name, internal_model, mac, scale_type + "", device_type + "");
+                        }
+                    })
+                }).catch(e => {
+                Platform.OS === 'android' ? ToastAndroid.show("网络不给力，请重试", ToastAndroid.SHORT) : AlertIOS.alert("网络不给力，请重试");
+            });
 
     }
 
     render() {
         const themeColor = this.props.themeColor;
 
-        console.log("ysq",this.props.themeColor);
+        console.log("ysq", this.props.themeColor);
 
         var ruler;
         if (Platform.OS === 'android') {
@@ -110,7 +115,8 @@ export default class EnterWeightView extends Component {
                            color={themeColor}
                            onScrollChange={(event) => this.onWebViewScroll(event)}></RulerView>);
         } else {
-          ruler = (<IOSRulerView style={styles.rulerView} onChange={(event) => this.onWebViewScroll(event)}></IOSRulerView>)
+            ruler = (<IOSRulerView style={styles.IOSrulerView}
+                                   onChange={(event) => this.onWebViewScroll(event)}></IOSRulerView>)
         }
 
         return (
@@ -187,5 +193,9 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
         marginTop: 20
+    },
+    IOSrulerView: {
+        height: 200,
+        width: Dimensions.get('window').width,
     }
 });
