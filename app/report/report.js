@@ -164,10 +164,6 @@ export default class ReportActivity extends Component {
         return (
             <ScrollView style={styles.container}>
                 <View onLayout={(e) => this.onLayout(e)} style={{width: layoutWidth}}>
-                    <View style={styles.rightTopQrImg}>
-                        <Image source={require('../imgs/qr_code_app.png')}/>
-                        <Text style={styles.rightTopQrImgText}>轻牛APP</Text>
-                    </View>
                     <Image source={require('../imgs/report_head.png')} style={styles.head}>
 
                         <View style={styles.user}>

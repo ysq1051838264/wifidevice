@@ -14,8 +14,7 @@ var ReportCorderView = React.createClass({
 
     render() {
         return (
-            <View>
-                {this.renderBottomView()}
+            <View style={{height: 40}}>
             </View>
         );
     },

@@ -2,7 +2,7 @@
  * Created by DonYau on 2017/3/9.
  */
 
-import React, {Component} from  'React';
+import React, {Component} from 'React';
 
 import {
     View,
@@ -23,7 +23,7 @@ var ReportCorderView = require('./ReportCordeView');
 
 var ReportShared = React.createClass({
 
-    getInitialState(){
+    getInitialState() {
         console.log("初始化属性", this.props);
         return {
             avaterImg: '',
@@ -40,11 +40,11 @@ var ReportShared = React.createClass({
         }
     },
 
-    componentWillMount(){
+    componentWillMount() {
         this.fetchReportData();
     },
 
-    async fetchReportData(){
+    async fetchReportData() {
         console.log('====' + this.props.themeColor);
         if (Platform.OS === 'ios') {
             try {
@@ -84,7 +84,7 @@ var ReportShared = React.createClass({
         }
     },
 
-    render(){
+    render() {
         return (
             <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
                 <ListView
@@ -103,7 +103,7 @@ var ReportShared = React.createClass({
     },
 
     //HeaderView
-    renderHeader(){
+    renderHeader() {
         var f = this.state.score.toFixed(1) * 10;
         const scoreString = f + "分";
         const bigScore = scoreString.substr(0, scoreString.length - 2);
@@ -115,40 +115,71 @@ var ReportShared = React.createClass({
         </View>);
 
         return (
-            <View style={styles.headerViewStyle}>
-                {/* 背景 */}
-                <Image style={styles.backgroudImageStyle} source={require('../imgs/report_head.png')}/>
-                {/* 二维码 */}
-                <View style={styles.coderStyle}>
-                    <Image style={styles.coderImageStyle} source={require('../imgs/qr_code_app.png')}/>
-                    <Text style={styles.coderTitleStyle}>轻牛APP</Text>
-                </View>
-                <View style={styles.personMsgStyle}>
-                    {/*头像*/}
-                    <Image style={styles.avaterStyle} source={this.getUserAvater()}/>
-                    <View>
-                        {/*昵称*/}
-                        <Text style={styles.accountStyle}>{this.state.account}</Text>
-                        {/*测量时间*/}
-                        <Text style={styles.measureTimeStyle}>{this.state.measureTime}</Text>
+            <View style={{width: 320}}>
+                <Image source={require('../imgs/report_head.png')} style={styles.head}>
+                    <View style={styles.user}>
+                        <Image source={this.getUserAvater()}
+                               style={styles.avatar}>
+                        </Image>
+
+                        <View style={styles.usernameTextContainer}>
+                            <Text style={styles.username}>
+                                {this.state.account}
+                            </Text>
+                            <Text style={styles.measureDate}>
+                                {this.state.measureTime}
+                            </Text>
+                            {this.getBodyShapeImg(this.state.bodyShapeStr)}
+                        </View>
+                        {/*这里是分数*/}
+                        <View style={[styles.scoreContainerOuter, {borderColor: this.props.themeColor}]}>
+                            <View style={[styles.scoreContainerInner, {backgroundColor: this.props.themeColor}]}>
+                                <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
+                                    <Text style={[styles.score, styles.scoreBig]}>
+                                        {bigScore}
+                                    </Text>
+                                    <Text style={[styles.score, styles.scoreSmall]}>
+                                        {smallScore}
+                                    </Text>
+                                </View>
+                            </View>
+                        </View>
                     </View>
-                </View>
-                <View style={styles.measureMsgStyle}>
-                    {/*分数*/}
-                    {scoreView}
-                    {/*体型*/}
-                    {this.getBodyShapeImg(this.state.bodyShapeStr)}
-                </View>
-                {/*描述*/}
-                <Text style={styles.descriptionStyle}>{this.state.description}</Text>
+                </Image>
+
+                <Text style={[styles.descriptionStyle, {color: this.props.themeColor}]}>
+                    {this.state.description}
+                </Text>
             </View>
         )
     },
 
+
+    getValue(data) {
+        var value = data.rsType
+        if (data.title === "最佳视觉体重" || data.title === "标准体重") {
+            value = ""
+        }
+        if (value !== "") {
+            return (
+                //  {/*指标的判断*/}
+                <View style={{flex: 3, flexDirection: 'row-reverse'}}><Text
+                    style={[styles.rsTypeStyle, {color: this.getColor(data.rsType)}, {borderColor: this.getColor(data.rsType)}]}>{value}</Text>
+                </View>
+            )
+        } else {
+            return (
+                <View style={{flex: 3, flexDirection: 'row-reverse'}}>
+                </View>)
+        }
+    },
+
     //cell
-    renderCell(data, sectionId, rowId){
+    renderCell(data, sectionId, rowId) {
         var topDis = 0;
         var secHeight = 49;
+
+
         if (rowId == 0) {
             topDis = -1;
             secHeight = 50;
@@ -166,7 +197,7 @@ var ReportShared = React.createClass({
                     backgroundColor: 'rgb(230, 230, 230)'
                 }}>
                     <View style={{
-                        width: 42,
+                        width: 45,
                         backgroundColor: 'white',
                         height: 50,
                         flexDirection: 'row',
@@ -177,7 +208,7 @@ var ReportShared = React.createClass({
                     <View style={{
                         height: secHeight,
                         backgroundColor: 'white',
-                        width: ScreenWidth - 42,
+                        width: ScreenWidth - 45,
                         marginTop: topDis
                     }}>
                         <View style={{flexDirection: 'row', alignItems: 'center', height: secHeight}}>
@@ -188,10 +219,7 @@ var ReportShared = React.createClass({
                                 <Text style={styles.scaleValueStyle}>{data.scaleValue}</Text>
                                 <Text style={styles.saleUnitStyle}>{data.unit}</Text>
                             </View>
-                            {/*指标的判断*/}
-                            <View style={{flex: 3, flexDirection: 'row-reverse'}}><Text
-                                style={[styles.rsTypeStyle, {color: this.getColor(data.rsType)}, {borderColor: this.getColor(data.rsType)}]}>{data.rsType}</Text>
-                            </View>
+                            {this.getValue(data)}
                         </View>
                     </View>
                 </View>
@@ -199,17 +227,16 @@ var ReportShared = React.createClass({
         )
     },
 
-    renderFooter(){
+    renderFooter() {
         return (
-            <ReportCorderView
-                showCode={this.state.isShareFlag}
-            />
+            <View style={{height: 20}}>
+            </View>
         )
     },
 
     //高度
-    onLayout(e){
-        const {width, height} =  e.nativeEvent.layout;
+    onLayout(e) {
+        const {width, height} = e.nativeEvent.layout;
         if (height > 200) {
             if (Platform.OS === 'ios') {
                 NativeModules.QNUI.onGetAnalysisReport(width, height)
@@ -220,7 +247,7 @@ var ReportShared = React.createClass({
     },
 
     //获取头像
-    getUserAvater(){
+    getUserAvater() {
         if (this.state.avaterImg == "") {
             if (this.state.gender == "1") {
                 return require('../imgs/avatar_man.png')
@@ -234,7 +261,7 @@ var ReportShared = React.createClass({
     },
 
     //获取体型
-    getBodyShapeImg(bodyShape){
+    getBodyShapeImg(bodyShape) {
         console.log(bodyShape)
         var bgImg = "";
         var frImg = "";
@@ -302,7 +329,7 @@ var ReportShared = React.createClass({
         }
     },
 
-    getColor(target){
+    getColor(target) {
         var color;
         if (target === "严重偏低") {
             color = '#A98CE9'
@@ -336,50 +363,75 @@ var ReportShared = React.createClass({
 
 
     //根据指标名查找指标的标志图片
-    getScaleIcon(scaleName){
+    getScaleIcon(scaleName) {
         var icon;
         switch (scaleName) {
             case "体重":
-                icon = require('../imgs/scaleIcon/weight_icon.png')
-                break
-            case "BMI":
-                icon = require('../imgs/scaleIcon/bmi_icon.png')
+                icon = require('../imgs/reportdata/report_weight.png')
                 break
             case "体脂率":
-                icon = require('../imgs/scaleIcon/bodyfat_icon.png')
+                icon = require('../imgs/reportdata/report_fat.png')
+                break
+            case "脂肪率":
+                icon = require('../imgs/reportdata/report_fat.png')
                 break
             case "去脂体重":
-                icon = require('../imgs/scaleIcon/fat_free_weight_icon.png')
+                icon = require('../imgs/reportdata/report_fat_weight.png')
                 break
             case "皮下脂肪率":
                 icon = require('../imgs/scaleIcon/subfat_icon.png')
                 break
+            case "脂肪重量":
+                icon = require('../imgs/reportdata/fat_weight.png')
+                break
             case "内脏脂肪等级":
-                icon = require('../imgs/scaleIcon/visfat_icon.png')
+                icon = require('../imgs/reportdata/report_visfat.png')
                 break
-            case "体水分":
-                icon = require('../imgs/scaleIcon/water_icon.png')
-                break
-            case "骨骼肌率":
-                icon = require('../imgs/scaleIcon/muscle_icon.png')
+            case "肥胖度":
+                icon = require('../imgs/reportdata/report_obesity.png')
                 break
             case "肌肉量":
-                icon = require('../imgs/scaleIcon/sinew_icon.png')
+                icon = require('../imgs/reportdata/report_muscle_mass.png')
                 break
             case "骨量":
-                icon = require('../imgs/scaleIcon/bone_icon.png')
-                break
-            case "蛋白质":
-                icon = require('../imgs/scaleIcon/protein_icon.png')
+                icon = require('../imgs/reportdata/report_bone.png')
                 break
             case "基础代谢率":
-                icon = require('../imgs/scaleIcon/bmr_icon.png')
+                icon = require('../imgs/reportdata/report_basal_metabolic.png')
+                break
+            case "蛋白质":
+                icon = require('../imgs/reportdata/report_protein.png')
+                break
+            case "骨骼肌率":
+                icon = require('../imgs/reportdata/report_muscle_rate.png')
+                break
+            case "体水分":
+                icon = require('../imgs/reportdata/report_water.png')
                 break
             case "体年龄":
-                icon = require('../imgs/scaleIcon/bodyage_icon.png')
+                icon = require('../imgs/reportdata/report_age.png')
                 break
             case "腰臀比":
-                icon = require('../imgs/scaleIcon/whr_icon.png')
+                icon = require('../imgs/reportdata/report_wist_hip.png')
+                break
+            case "BMI":
+                icon = require('../imgs/reportdata/report_bmi.png')
+                break
+            case "体重控制":
+                icon = require('../imgs/reportdata/report_weight_control.png')
+                break
+            case "脂肪控制":
+                icon = require('../imgs/reportdata/report_control_fat.png')
+                break
+            case "肌肉控制":
+                icon = require('../imgs/reportdata/report_control_muscle.png')
+                break
+            case "最佳视觉体重":
+                icon = require('../imgs/reportdata/visval_weight.png')
+                break
+            case "标准体重":
+                icon = require('../imgs/reportdata/standard_weight.png')
+                break
         }
         return icon
     }
@@ -389,7 +441,10 @@ var ReportShared = React.createClass({
 
 const styles = StyleSheet.create({
     //头部
-    headerViewStyle: {},
+    headerViewStyle: {
+        flexDirection: 'row',
+        marginBottom: 10,
+    },
 
     backgroudImageStyle: {
         position: 'absolute',
@@ -421,10 +476,38 @@ const styles = StyleSheet.create({
     avaterStyle: {
         height: 60,
         width: 60,
-        marginLeft: 20,
+        marginLeft: 15,
         marginTop: 40,
         borderRadius: 30,
     },
+    user: {
+        marginTop: 25,
+        flexDirection: 'row',
+        marginLeft: 20,
+    },
+    avatar: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+    },
+    usernameTextContainer: {
+        marginLeft: 5,
+    },
+    username: {
+        color: '#333',
+        fontWeight: 'bold',
+        marginTop: 3,
+        backgroundColor: 'transparent'
+    },
+    measureDate: {
+        textAlign: 'center',
+        color: '#000',
+        fontSize: 11,
+        marginTop: 8,
+        backgroundColor: 'transparent',
+
+    },
+
     //昵称
     accountStyle: {
         height: 20,
@@ -444,6 +527,37 @@ const styles = StyleSheet.create({
     measureMsgStyle: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+    },
+
+    scoreContainerOuter: {
+        width: 80,
+        height: 80,
+        borderRadius: 40,
+        borderWidth: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginLeft: 15,
+        marginTop: 22,
+    },
+
+    scoreContainerInner: {
+        width: 70,
+        height: 70,
+        borderRadius: 35,
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "row",
+    },
+    score: {
+        color: 'white',
+        backgroundColor: "transparent",
+        flexWrap: "nowrap",
+    },
+    scoreBig: {
+        fontSize: 20,
+    },
+    scoreSmall: {
+        fontSize: 15,
     },
 
     //分数
@@ -472,6 +586,7 @@ const styles = StyleSheet.create({
     bodyShapeStyle: {
         flexDirection: 'row-reverse',
         right: 10,
+        marginTop: 10
     },
 
     //体型灰色背景
@@ -494,13 +609,13 @@ const styles = StyleSheet.create({
 
     //描述
     descriptionStyle: {
-        color: 'rgb(179, 179, 179)',
-        marginTop: 15,
+        marginTop: 20,
         marginLeft: 20,
         marginRight: 20,
         fontSize: 13,
-        marginBottom: 20,
+        marginBottom: 10,
     },
+
     //cell
     cellViewStyle: {
         height: 50,
@@ -508,7 +623,9 @@ const styles = StyleSheet.create({
     //指标icon
     scaleIconStyle: {
         marginLeft: 10,
-        resizeMode: Image.resizeMode.contain
+        resizeMode: Image.resizeMode.contain,
+        width: 27,
+        height: 27
     },
     //指标名称
     scaleTitleStyle: {
