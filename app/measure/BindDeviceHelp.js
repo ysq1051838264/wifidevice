@@ -38,7 +38,7 @@ var BindDeviceHelp = React.createClass({
                 <Text style={styles.textStyle}>
                     2. 如果是安卓6.0的设备，请确定是否已经授予
                     <Text style={styles.redText}>
-                        轻牛 定位权限
+                        天天轻 定位权限
                     </Text>
                 </Text>
 
@@ -64,7 +64,7 @@ var BindDeviceHelp = React.createClass({
 
 
                 <Text style={styles.secondTitleStyle}>
-                    授予轻牛定位权限
+                    授予天天轻定位权限
                 </Text>
 
                 <Text style={styles.textStyle}>
@@ -93,7 +93,7 @@ var BindDeviceHelp = React.createClass({
                     </Text>
 
                     <Text style={styles.redText}>
-                        轻牛
+                        天天轻
                     </Text>
 
                     <Text style={styles.textStyle}>
@@ -146,23 +146,21 @@ var BindDeviceHelp = React.createClass({
                 </Text>
 
 
-
-
                 <Image style={styles.imageStyle}
-                       source={{uri: 'http://7vikuc.com1.z0.glb.clouddn.com/setting.jpg'}}>
+                       source={require('../imgs/help/setting@3x.png')}>
                 </Image>
 
                 <Image style={styles.imageStyle}
-                       source={{uri: 'http://7vikuc.com1.z0.glb.clouddn.com/all_app.jpg'}}>
+                       source={require('../imgs/help/all_app@3x.png')}>
                 </Image>
 
 
                 <Image style={styles.imageStyle}
-                       source={{uri: 'http://7vikuc.com1.z0.glb.clouddn.com/app_detail.jpg '}}>
+                       source={require('../imgs/help/app_detail@3x.png')}>
                 </Image>
 
                 <Image style={styles.imageStyle}
-                       source={{uri: 'http://7vikuc.com1.z0.glb.clouddn.com/permission_setting.jpg'}}>
+                       source={require('../imgs/help/permission_setting@3x.png')}>
                 </Image>
 
             </ScrollView>

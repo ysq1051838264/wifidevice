@@ -74,7 +74,7 @@ export default class ReportActivity extends Component {
 
     onLayout(e) {
         console.log("布局完成:", e.nativeEvent.layout);
-        const {width, height} =  e.nativeEvent.layout;
+        const {width, height} = e.nativeEvent.layout;
 
         if (height > 200) {
             NativeModules.QNUI.onGetViewSize(width, height)
@@ -92,9 +92,7 @@ export default class ReportActivity extends Component {
             var icon = this.state.user.gender == 1 ? require("../imgs/avatar_man@3x.png") : require("../imgs/avatar_woman@3x.png");
 
         const bodyshape = this.state.bodyshape;
-
         //底部分享的视图
-
         var bodyshapeView;
         if (bodyshape == "") {
             bodyshapeView = null;
@@ -161,13 +159,13 @@ export default class ReportActivity extends Component {
                 </View>
             </View>)
         }
-        return (
-            <ScrollView style={styles.container}>
-                <View onLayout={(e) => this.onLayout(e)} style={{width: layoutWidth}}>
-                    <Image source={require('../imgs/report_head.png')} style={styles.head}>
 
+        var headView;
+        if (this.state.description === '' || this.state.description === null) {
+            headView = ( <View style={{width: 320}}>
+                    <Image source={require('../imgs/report_head.png')} style={styles.head}>
                         <View style={styles.user}>
-                            <Image source={(avatarUrl == "" ? icon : {uri: avatarUrl}) }
+                            <Image source={(avatarUrl == "" ? icon : {uri: avatarUrl})}
                                    style={styles.avatar}>
                             </Image>
 
@@ -195,10 +193,56 @@ export default class ReportActivity extends Component {
                             </View>
                         </View>
                     </Image>
+                </View>
+            )
+        } else {
+            headView = (
+                <View style={{width: 320}}>
+                    <Image source={require('../imgs/report_head.png')} style={styles.head}>
+
+                        <View style={styles.user}>
+                            <Image source={(avatarUrl == "" ? icon : {uri: avatarUrl})}
+                                   style={styles.avatar}>
+                            </Image>
+
+                            <View style={styles.usernameTextContainer}>
+                                <Text style={styles.username}>
+                                    {this.state.user.username}
+                                </Text>
+                                <Text style={styles.measureDate}>
+                                    {this.state.measureDate}
+                                </Text>
+                                {bodyshapeView}
+                            </View>
+                            {/*这里是分数*/}
+                            <View style={[styles.scoreContainerOuter, {marginTop: 22,}]}>
+                                <View style={styles.scoreContainerInner}>
+                                    <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
+                                        <Text style={[styles.score, styles.scoreBig]}>
+                                            {bigScore}
+                                        </Text>
+                                        <Text style={[styles.score, styles.scoreSmall]}>
+                                            {smallScore}
+                                        </Text>
+                                    </View>
+                                </View>
+                            </View>
+                        </View>
+                    </Image>
 
                     <Text style={styles.description}>
                         {this.state.description}
                     </Text>
+                </View>
+            )
+        }
+
+        return (
+            <ScrollView style={styles.container}>
+                <View onLayout={(e) => this.onLayout(e)} style={{width: layoutWidth}}>
+
+                    {headView}
+
                     <View style={{flexDirection: 'row', width: layoutWidth - 50, alignSelf: 'center'}}>
                         <View style={{
                             position: 'absolute',
@@ -215,6 +259,7 @@ export default class ReportActivity extends Component {
                                 borderStyle: 'dashed'
                             }}/>
                         </View>
+
                         {<View style={styles.contentList}>
                             {
                                 this.state.list.map((item) => {
@@ -232,17 +277,18 @@ export default class ReportActivity extends Component {
         );
     }
 
+
     static renderRow(rowData) {
 
         const viewWidth = layoutWidth - 50;
 
         const renderData = rowData.isStand ? {
-                length: viewWidth * 0.75,
-                color: '#abca33'
-            } : {
-                length: viewWidth * 0.35,
-                color: '#fdbf3d'
-            };
+            length: viewWidth * 0.75,
+            color: '#abca33'
+        } : {
+            length: viewWidth * 0.35,
+            color: '#fdbf3d'
+        };
         return (
             <View key={rowData.name}
                   style={styles.rowData}>
@@ -256,14 +302,14 @@ export default class ReportActivity extends Component {
                     fontSize: 11,
                     color: '#999',
                 }}>{rowData.name}</Text>
-            </View >
+            </View>
         )
     }
 
     prepareStyle(themeColor) {
         styles = StyleSheet.create({
             container: {
-                backgroundColor: '#F5FCFF',
+                backgroundColor: '#FFFFFF',
                 alignSelf: 'center',
                 width: layoutWidth,
             },
@@ -341,7 +387,6 @@ export default class ReportActivity extends Component {
                 justifyContent: "center",
                 alignItems: "center",
                 marginLeft: 5,
-                marginTop: 22,
             },
             scoreContainerInner: {
                 width: 70,
@@ -365,6 +410,7 @@ export default class ReportActivity extends Component {
             },
             description: {
                 color: themeColor,
+                marginTop: 10,
                 fontSize: 14,
                 marginLeft: 25,
                 paddingBottom: 10,
@@ -429,4 +475,5 @@ export default class ReportActivity extends Component {
 }
 
 
-var styles;
+var
+    styles;

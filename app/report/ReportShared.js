@@ -89,8 +89,8 @@ var ReportShared = React.createClass({
             <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
                 <ListView
                     dataSource={this.state.dataSource}
-                    renderRow={this.renderCell}
                     renderHeader={this.renderHeader}
+                    renderRow={this.renderCell}
                     style={{width: 320, backgroundColor: 'white', height: this.props.height}}
                     bounces={false}
                     showsVerticalScrollIndicator={false}
@@ -114,44 +114,82 @@ var ReportShared = React.createClass({
             <Text style={[styles.scoreRightStyle, {color: this.props.themeColor}]}> {smallScore}</Text>
         </View>);
 
-        return (
-            <View style={{width: 320}}>
-                <Image source={require('../imgs/report_head.png')} style={styles.head}>
-                    <View style={styles.user}>
-                        <Image source={this.getUserAvater()}
-                               style={styles.avatar}>
-                        </Image>
+        if (this.state.description === '' || this.state.description === null) {
+            return (
+                <View style={{width: 320}}>
+                    <Image source={require('../imgs/report_head.png')} style={styles.head}>
+                        <View style={styles.user}>
+                            <Image source={this.getUserAvater()}
+                                   style={styles.avatar}>
+                            </Image>
 
-                        <View style={styles.usernameTextContainer}>
-                            <Text style={styles.username}>
-                                {this.state.account}
-                            </Text>
-                            <Text style={styles.measureDate}>
-                                {this.state.measureTime}
-                            </Text>
-                            {this.getBodyShapeImg(this.state.bodyShapeStr)}
+                            <View style={styles.usernameTextContainer}>
+                                <Text style={styles.username}>
+                                    {this.state.account}
+                                </Text>
+                                <Text style={styles.measureDate}>
+                                    {this.state.measureTime}
+                                </Text>
+                            </View>
+
+                            {/*这里是分数*/}
+                            <View style={[styles.scoreContainerOuter, {borderColor: this.props.themeColor,}]}>
+                                <View style={[styles.scoreContainerInner, {backgroundColor: this.props.themeColor}]}>
+                                    <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
+                                        <Text style={[styles.score, styles.scoreBig]}>
+                                            {bigScore}
+                                        </Text>
+                                        <Text style={[styles.score, styles.scoreSmall]}>
+                                            {smallScore}
+                                        </Text>
+                                    </View>
+                                </View>
+                            </View>
+
                         </View>
-                        {/*这里是分数*/}
-                        <View style={[styles.scoreContainerOuter, {borderColor: this.props.themeColor}]}>
-                            <View style={[styles.scoreContainerInner, {backgroundColor: this.props.themeColor}]}>
-                                <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
-                                    <Text style={[styles.score, styles.scoreBig]}>
-                                        {bigScore}
-                                    </Text>
-                                    <Text style={[styles.score, styles.scoreSmall]}>
-                                        {smallScore}
-                                    </Text>
+                    </Image>
+                </View>
+            )
+        } else {
+            return (
+                <View style={{width: 320}}>
+                    <Image source={require('../imgs/report_head.png')} style={styles.head}>
+                        <View style={styles.user}>
+                            <Image source={this.getUserAvater()}
+                                   style={styles.avatar}>
+                            </Image>
+
+                            <View style={styles.usernameTextContainer}>
+                                <Text style={styles.username}>
+                                    {this.state.account}
+                                </Text>
+                                <Text style={styles.measureDate}>
+                                    {this.state.measureTime}
+                                </Text>
+                                {this.getBodyShapeImg(this.state.bodyShapeStr)}
+                            </View>
+                            {/*这里是分数*/}
+                            <View style={[styles.scoreContainerOuter, {borderColor: this.props.themeColor,marginTop: 22,}]}>
+                                <View style={[styles.scoreContainerInner, {backgroundColor: this.props.themeColor}]}>
+                                    <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
+                                        <Text style={[styles.score, styles.scoreBig]}>
+                                            {bigScore}
+                                        </Text>
+                                        <Text style={[styles.score, styles.scoreSmall]}>
+                                            {smallScore}
+                                        </Text>
+                                    </View>
                                 </View>
                             </View>
                         </View>
-                    </View>
-                </Image>
+                    </Image>
 
-                <Text style={[styles.descriptionStyle, {color: this.props.themeColor}]}>
-                    {this.state.description}
-                </Text>
-            </View>
-        )
+                    <Text style={[styles.descriptionStyle, {color: this.props.themeColor}]}>
+                        {this.state.description}
+                    </Text>
+                </View>
+            )
+        }
     },
 
 
@@ -537,7 +575,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         marginLeft: 15,
-        marginTop: 22,
     },
 
     scoreContainerInner: {
@@ -609,7 +646,7 @@ const styles = StyleSheet.create({
 
     //描述
     descriptionStyle: {
-        marginTop: 20,
+        marginTop: 30,
         marginLeft: 20,
         marginRight: 20,
         fontSize: 13,
