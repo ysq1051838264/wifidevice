@@ -70,7 +70,7 @@ export default class ReportDataCompareShare extends Component {
 
     onLayout(e) {
         console.log("布局完成:", e.nativeEvent.layout);
-        const {width, height} =  e.nativeEvent.layout;
+        const {width, height} = e.nativeEvent.layout;
 
         if (height > 200) {
             if (Platform.OS === 'ios') {
@@ -191,6 +191,9 @@ export default class ReportDataCompareShare extends Component {
         var status = this.state.titleStatus;
         var code = this.state.showCode;
 
+        console.log("体脂率的值", this.state.titleStatus.bodyFatName);
+
+
         if (avatarUrl == "")
             var icon = this.state.user.gender == 1 ? require("../imgs/avatar_man@3x.png") : require("../imgs/avatar_woman@3x.png");
 
@@ -203,7 +206,7 @@ export default class ReportDataCompareShare extends Component {
 
                 <Image source={require('../imgs/report_head@3x.png')} style={styles.head}>
                     <View style={styles.userStyle}>
-                        <Image source={(avatarUrl == "" ? icon : {uri: avatarUrl}) } style={styles.avatar}/>
+                        <Image source={(avatarUrl == "" ? icon : {uri: avatarUrl})} style={styles.avatar}/>
                         <Text style={styles.username}> {this.state.user.username} </Text>
                     </View>
 
@@ -211,30 +214,24 @@ export default class ReportDataCompareShare extends Component {
                         <View style={styles.compareInclude}>
                             <Text style={styles.compareTitle}>{status.timeTitle}</Text>
                             <View style={{flexDirection: 'row'}}>
-                                <Text style={styles.compareTitleContext}>{status.timeName}</Text>
-                                <View style={styles.compareTitleUnitContext}>
-                                    <Text style={{color: '#333', fontSize: 10,}}>{status.timeUnit}</Text>
-                                </View>
+                                <Text style={styles.compareTitleContext}>{status.timeName} </Text>
+                                <Text style={styles.compareTitleUnitContext}>{status.timeUnit}</Text>
                             </View>
                         </View>
 
                         <View style={styles.compareInclude}>
                             <Text style={styles.compareTitle}>{status.weightTitle}</Text>
                             <View style={{flexDirection: 'row'}}>
-                                <Text style={styles.compareTitleContext}>{status.weightName}</Text>
-                                <View style={styles.compareTitleUnitContext}>
-                                    <Text style={{color: '#333', fontSize: 10,}}>{status.weightUnit}</Text>
-                                </View>
+                                <Text style={styles.compareTitleContext}>{status.weightName} </Text>
+                                <Text style={styles.compareTitleUnitContext}>{status.weightUnit}</Text>
                             </View>
                         </View>
 
                         <View style={styles.compareInclude}>
                             <Text style={styles.compareTitle}>{status.bodyFatTitle}</Text>
-                            <View style={{flexDirection: 'row'}}>
-                                <Text style={styles.compareTitleContext}>{status.bodyFatName}</Text>
-                                <View style={styles.compareTitleUnitContext}>
-                                    <Text style={{color: '#333', fontSize: 10,}}>{status.bodyFatUnit}</Text>
-                                </View>
+                            <View style={{flexDirection: 'row', justifyContent: 'center', width: layoutWidth / 3,}}>
+                                <Text style={styles.compareTitleContext}>{status.bodyFatName} </Text>
+                                <Text style={styles.compareTitleUnitContext}>{status.bodyFatUnit}</Text>
                             </View>
                         </View>
                     </View>
@@ -322,7 +319,6 @@ var styles = StyleSheet.create({
     compareInclude: {
         width: layoutWidth / 3,
         alignItems: 'center',
-        justifyContent: 'flex-end',
         marginTop: 15
     },
 
@@ -333,16 +329,16 @@ var styles = StyleSheet.create({
     },
 
     compareTitleContext: {
-        alignItems: 'center',
-        justifyContent: 'center',
         color: '#4D4D4D',
         fontSize: 18,
         fontWeight: 'bold',
     },
 
     compareTitleUnitContext: {
-        alignItems: 'flex-end',
-        justifyContent: 'flex-end'
+        color: '#333',
+        marginLeft: 2,
+        fontSize: 10,
+        marginTop: 10,
     },
 
     compareTime: {
